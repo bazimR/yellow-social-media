@@ -4,7 +4,7 @@ const theme = createTheme({
     fontFamily: "Roboto, sans-serif",
     fontSize: 14,
     fontWeightRegular: 400,
-    fontWeightMedium: 500,
+    fontWeightMedium: 600,
     fontWeightBold: 700,
     h1: {
       fontSize: "2.5rem",
@@ -40,7 +40,7 @@ const theme = createTheme({
       main: "#5658d4",
     },
     secondary: {
-      main: "#f50057",
+      main: "#ffff",
     },
     background: {
       paper: "#ffffff",

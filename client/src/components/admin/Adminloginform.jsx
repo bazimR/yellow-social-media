@@ -1,17 +1,36 @@
 import { Grid, TextField, Button } from "@mui/material";
 import { useFormik } from "formik";
-import { loginValidation } from "../../helper/Validate";
+import { adminloginValidation } from "../../helper/Validate";
+import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { adminLogin } from "../../helper/helper";
+
 const Loginform = () => {
+  const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
       email: "",
       password: "",
     },
-    validate: loginValidation,
+    validate: adminloginValidation,
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: async (values) => {
-      console.log(values);
+      const adminLoginPromise = adminLogin ({
+        email: values.email,
+        password: values.password,
+      });
+      toast.promise(adminLoginPromise, {
+        loading: "Checking.....",
+        success: <b>Login successful</b>,
+        error: <b>Password does not Match</b>,
+      });
+      adminLoginPromise.then((res) => {
+        console.log(res);
+        let ADMINTOKEN = res;
+        localStorage.setItem("ADMINTOKEN", ADMINTOKEN);
+        navigate("/admin");
+      });
     },
   });
 

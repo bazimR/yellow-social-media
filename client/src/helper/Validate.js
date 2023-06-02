@@ -89,8 +89,15 @@ export async function loginValidation(values) {
     passwordVerify(error, values)
     return error
 }
-// login validation
+// otp validation
 export async function otpValidation(values) {
     const error = otpVerify({}, values)
+    return error
+}
+// login validation
+export async function adminloginValidation(values) {
+    const error = emailVerify({}, values)
+    if (error.email) return error
+    passwordVerify(error, values)
     return error
 }

@@ -1,7 +1,11 @@
 import { Grid, TextField, Button, Typography } from "@mui/material";
 import { useFormik } from "formik";
 import { signUpValidation } from "../../helper/Validate";
+import { userSignup } from "../../helper/helper";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 const Signupform = () => {
+  const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -13,7 +17,15 @@ const Signupform = () => {
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: async (values) => {
-      console.log(values);
+      const userSignupPromise = userSignup(values);
+      toast.promise(userSignupPromise, {
+        loading: "Creating...!",
+        success: <b>Signup successful...!</b>,
+        error: <b> Could not sign up</b>,
+      });
+      userSignupPromise.then(() => {
+        navigate('/')
+      });
     },
   });
 

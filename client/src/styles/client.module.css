@@ -1,5 +1,10 @@
-body {
+body {  
+    margin: 0;
+    padding: 0;
     background: #dcdce6;
     background-image: url('../assets/background.png');
 
 }
+::-webkit-scrollbar {
+    display: none;
+  }

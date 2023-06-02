@@ -1,20 +1,22 @@
-import { Grid, Typography } from "@mui/material";
+import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
+
 import { Toaster } from "react-hot-toast";
-import Loginform from "../../components/user/Loginform";
+import Adminloginform from "../../components/admin/Adminloginform";
 const Adminlogin = () => {
   return (
     <>
       <Grid
         container
-        marginBottom={16}
+        marginBottom={2}
         marginTop={2}
         direction="column"
         justifyContent="center"
         alignItems="center"
         spacing={2}
       >
-        <Toaster position="top-center" reverseOrder></Toaster>
-        <Grid item xs={12}>
+        <Toaster position="top-center"></Toaster>
+        <Grid item xs={12} mb={-4}>
           <svg
             width="14rem"
             height="14rem"
@@ -28,7 +30,9 @@ const Adminlogin = () => {
             />
           </svg>
         </Grid>
-        <Typography m={2} variant="h2" color="primary">Admin</Typography>
+        <Typography mb={ 3} variant="h2" color="primary">
+          Admin
+        </Typography>
         <Grid
           item
           xs={12}
@@ -38,14 +42,22 @@ const Adminlogin = () => {
           sx={{
             width: {
               xs: "80%",
-              md: "40rem",
+              md: "30%",
+              lg: "30%",
+              xl: "20%",
             },
           }}
         >
-          <Loginform />
+          <Adminloginform />
         </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={3} sx={{ textAlign: "center" }}>
-        </Grid>
+        <Grid
+          item
+          xs={12}
+          sm={6}
+          md={4}
+          lg={3}
+          sx={{ textAlign: "center" }}
+        ></Grid>
       </Grid>
       <footer style={{ textAlign: "center" }}>
         <Typography variant="body2" color="#747474">
