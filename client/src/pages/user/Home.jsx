@@ -6,16 +6,16 @@ import MobileHome from "../../components/user/MobileHome";
 const Home = () => {
   return (
     <>
-    <Grid container sx={{ display: { xs: "none", lg: "flex" } }}>
-      <Grid xs={8} container direction={"column"} sx={{display:"flex",justifyContent:'flex-start'}}>
-        <Story />
-        <Post/>
+      <Grid container  sx={{ display: { xs: "none", lg: "flex" } }}>
+        <Grid item xs={8} sx={{ display: "flex", flexDirection: "column" }}>
+          <Story />
+          <Post />
+        </Grid>
+        <Grid item xs={4} sx={{ height: "100vh" }}>
+          left
+        </Grid>
       </Grid>
-      <Grid xs={4} sx={{ height: "100vh" }}>
-        left
-      </Grid>
-    </Grid>
-    <MobileHome/>
+      <MobileHome />
     </>
   );
 };

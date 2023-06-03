@@ -15,7 +15,7 @@ import { FaRegBookmark } from "@react-icons/all-files/fa/FaRegBookmark.esm";
 import { useState } from "react";
 
 const Post = () => {
-  const post = ["", ",", ",", ",", ",", ""];
+  const post = ["qe", "wz", "sz", "fz", "ssz","dz"];
   const [like, setLike] = useState(false);
   const handleLike = () => {
     setLike(!like);
@@ -25,21 +25,21 @@ const Post = () => {
       container
       direction="row"
       sx={{
-        height:'75vh',
+        height: "75vh",
         overflow: "auto",
         paddingTop: 1,
       }}
     >
-      {post.map((post) => {
+      {post.map((posts) => {
         return (
           <Grid
             xs={12}
-            key={post}
+            key={posts}
             sx={{
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              marginBottom:2
+              marginBottom: 2,
             }}
           >
             <Card elevation={0} sx={{ width: 400, height: 580 }}>
