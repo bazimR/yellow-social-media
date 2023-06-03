@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { TiPlus } from "@react-icons/all-files/ti/TiPlus.esm";
 const Story = () => {
-    const story = ["robin", "rishal", "alen", "jackson","s","","","",""];
+    const story = ["robin", "rishal", "alen", "jackson","s","","","","","","","","",""];
   return (
     <Grid
       p={1}
@@ -17,14 +17,14 @@ const Story = () => {
       sx={{
         backgroundColor: "",
         width: "100%",
-        height: 200,
+        height: "25vh",
         display: "flex",
         flexDirection: "row",
         justifyContent: "flex-start",
         alignItems: "center",
         overflow: "auto",
-        borderBottom:3,
-        borderColor:'white',
+        borderBottom:{xs:0,lg:3},
+        borderBottomColor:{xs:'none',lg:'white'},
         paddingBottom:0,
         position:'inherit'
       }}

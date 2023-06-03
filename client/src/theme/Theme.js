@@ -6,6 +6,9 @@ const theme = createTheme({
     fontWeightRegular: 400,
     fontWeightMedium: 600,
     fontWeightBold: 700,
+    initial:{
+      main:'#004242'
+    },
     h1: {
       fontSize: "2.5rem",
       fontWeight: 700,
@@ -45,6 +48,9 @@ const theme = createTheme({
     background: {
       paper: "#ffffff",
     },
+    initial:{
+      main:'#004242'
+    }
   },
 });
 export default theme;

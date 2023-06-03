@@ -9,6 +9,8 @@ import {
   ListItemText,
   Divider,
   Collapse,
+  Modal,
+
 } from "@mui/material";
 import { useConfirm } from "material-ui-confirm";
 import { TiHome } from "@react-icons/all-files/ti/TiHome.esm";
@@ -19,20 +21,44 @@ import { TiPlus } from "@react-icons/all-files/ti/TiPlus.esm";
 import { TiPower } from "@react-icons/all-files/ti/TiPower.esm";
 
 import { useState } from "react";
+import MobileNav from "../../components/user/MobileNav";
 
 const Layoutuser = () => {
   const confirm = useConfirm();
+  const [modal, setModal] = useState(false);
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState();
   const navigate = useNavigate();
+  const BoxStyle = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: {
+      lg: "60vh",
+      xs: "70vh",
+    },
+    height: "60vh",
+    bgcolor: "background.paper",
+    borderRadius: "15px",
+    boxShadow: 24,
+    p: 0,
+    display: "flex",
+    justifyContent: "center",
+  };
   const handleClick = (index, href) => {
     setSelected(index);
     if (href) {
       navigate(href);
-      setOpen(false)
-    } else {
+      setOpen(false);
+    } else if (index === 4) {
       setOpen(!open);
+    } else if (index === 2) {
+      setModal(true);
     }
+  };
+  const handleClose = () => {
+    setModal(false);
   };
   const handleSignout = () => {
     confirm({
@@ -49,6 +75,34 @@ const Layoutuser = () => {
   };
   return (
     <main>
+      <Modal open={modal} onClose={handleClose}>
+        <Box sx={BoxStyle}>
+          <Grid
+            container
+            direction="column"
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Grid item sx={{top:0}}>
+              <Typography
+                sx={{ fontSize: "2em", color: "#004242", padding: 1 }}
+              >
+                create
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography
+                sx={{ fontSize: "2em", color: "#004242", padding: 1 }}
+              >
+                create
+              </Typography>
+            </Grid>
+          </Grid>
+        </Box>
+      </Modal>
       {/* large devices */}
       <Grid
         container
@@ -169,7 +223,7 @@ const Layoutuser = () => {
                 <Divider />
                 <ListItemButton
                   selected={selected === 2}
-                  onClick={() => handleClick(2, "/home/create")}
+                  onClick={() => handleClick(2)}
                 >
                   <ListItemIcon
                     sx={{
@@ -281,7 +335,7 @@ const Layoutuser = () => {
             </Typography>
           </Grid>
         </Grid>
-        <Grid item xs={20} justifyContent={'center'}>
+        <Grid item xs={20} justifyContent={"center"}>
           <Outlet />
         </Grid>
       </Grid>
@@ -305,7 +359,6 @@ const Layoutuser = () => {
           }}
         >
           <Outlet />
-          <h1>xs=8</h1>
         </Grid>
         <Grid
           item
@@ -318,7 +371,7 @@ const Layoutuser = () => {
             width: "100%",
           }}
         >
-          <h1>xs=8</h1>
+         <MobileNav/>
         </Grid>
       </Grid>
     </main>
