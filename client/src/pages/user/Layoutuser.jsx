@@ -350,7 +350,6 @@ const Layoutuser = () => {
           item
           xs={9}
           sx={{
-            backgroundColor: "red",
             position: "fixed",
             top: 0,
             left: 0,
@@ -364,7 +363,6 @@ const Layoutuser = () => {
           item
           xs={2}
           sx={{
-            backgroundColor: "blue",
             position: "fixed",
             bottom: 0,
             left: 0,

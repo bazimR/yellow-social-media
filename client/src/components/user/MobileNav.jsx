@@ -30,6 +30,7 @@ const MobileNav = () => {
   };
   return (
     <Grid
+    item
       xs={12}
       sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
     >

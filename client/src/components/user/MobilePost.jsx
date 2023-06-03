@@ -13,8 +13,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { BsChatSquareDots } from "@react-icons/all-files/bs/BsChatSquareDots.esm";
 import { FaRegBookmark } from "@react-icons/all-files/fa/FaRegBookmark.esm";
 import { useState } from "react";
-
-const Post = () => {
+const MobilePost = () => {
   const post = ["qe", "wz", "sz", "fz", "ssz", "dz"];
   const [like, setLike] = useState(false);
   const handleLike = () => {
@@ -27,7 +26,7 @@ const Post = () => {
       sx={{
         height: "75vh",
         overflow: "auto",
-        paddingTop: 1,
+        paddingTop: 1
       }}
     >
       {post.map((posts) => {
@@ -40,10 +39,10 @@ const Post = () => {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              marginBottom: 2,
+              marginBottom: 3,
             }}
           >
-            <Card elevation={0} sx={{ width: 400, height: 580 }}>
+            <Card elevation={0} sx={{ width: 350, height: 500 }}>
               <CardActions sx={{ top: 0, left: 0, padding: 0 }}>
                 <Button sx={{ padding: 1 }}>
                   <Avatar
@@ -59,7 +58,7 @@ const Post = () => {
                 <Typography
                   sx={{
                     padding: 0,
-                    marginRight: 23,
+                    marginRight: 17,
                     fontSize: "0.9em",
                     fontWeight: "fontWeightRegular",
                     color: "black",
@@ -73,8 +72,8 @@ const Post = () => {
               <CardContent
                 sx={{
                   backgroundColor: "red",
-                  width: 400,
-                  height: 430,
+                  width: 350,
+                  height: 350,
                   padding: 0,
                 }}
               ></CardContent>
@@ -143,4 +142,4 @@ const Post = () => {
   );
 };
 
-export default Post;
+export default MobilePost;
