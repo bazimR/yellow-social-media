@@ -9,7 +9,6 @@ import {
   ListItemText,
   Divider,
   Collapse,
-  Modal,
 
 } from "@mui/material";
 import { useConfirm } from "material-ui-confirm";
@@ -22,6 +21,7 @@ import { TiPower } from "@react-icons/all-files/ti/TiPower.esm";
 
 import { useState } from "react";
 import MobileNav from "../../components/user/MobileNav";
+import PostModal from "../../components/user/PostModal";
 
 const Layoutuser = () => {
   const confirm = useConfirm();
@@ -29,23 +29,6 @@ const Layoutuser = () => {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState();
   const navigate = useNavigate();
-  const BoxStyle = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: {
-      lg: "60vh",
-      xs: "70vh",
-    },
-    height: "60vh",
-    bgcolor: "background.paper",
-    borderRadius: "15px",
-    boxShadow: 24,
-    p: 0,
-    display: "flex",
-    justifyContent: "center",
-  };
   const handleClick = (index, href) => {
     setSelected(index);
     if (href) {
@@ -56,9 +39,6 @@ const Layoutuser = () => {
     } else if (index === 2) {
       setModal(true);
     }
-  };
-  const handleClose = () => {
-    setModal(false);
   };
   const handleSignout = () => {
     confirm({
@@ -73,36 +53,11 @@ const Layoutuser = () => {
         console.log("signout canceled");
       });
   };
+
   return (
     <main>
-      <Modal open={modal} onClose={handleClose}>
-        <Box sx={BoxStyle}>
-          <Grid
-            container
-            direction="column"
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Grid item sx={{top:0}}>
-              <Typography
-                sx={{ fontSize: "2em", color: "#004242", padding: 1 }}
-              >
-                create
-              </Typography>
-            </Grid>
-            <Grid item>
-              <Typography
-                sx={{ fontSize: "2em", color: "#004242", padding: 1 }}
-              >
-                create
-              </Typography>
-            </Grid>
-          </Grid>
-        </Box>
-      </Modal>
+      <PostModal modal={modal} setModal={setModal} />
+
       {/* large devices */}
       <Grid
         container
@@ -369,7 +324,7 @@ const Layoutuser = () => {
             width: "100%",
           }}
         >
-         <MobileNav/>
+          <MobileNav modal={modal} setModal={setModal} />
         </Grid>
       </Grid>
     </main>

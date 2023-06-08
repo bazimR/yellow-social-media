@@ -3,6 +3,7 @@ axios.defaults.baseURL = import.meta.env.VITE_SERVER_DOMAIN
 
 
 
+
 export async function userSignup(creds) {
     try {
         const { data: { Message }, status } = await axios.post(`/signup`, creds);
@@ -20,9 +21,8 @@ export async function userSignup(creds) {
 export async function userLogin({ email, password }) {
     try {
 
-        const { data: { token } } = await axios.post('/login', { email, password })
-        
-        return Promise.resolve(token)
+        const { data } = await axios.post('/login', { email, password })
+        return Promise.resolve(data)
     } catch (error) {
         return Promise.reject({ error: "password doest match" })
     }
@@ -34,5 +34,21 @@ export async function adminLogin({ email, password }) {
         return Promise.resolve(ADMINTOKEN)
     } catch (error) {
         return Promise.reject({ error: "password doest match" })
+    }
+}
+
+export async function newPost(formData) {
+    const token = localStorage.getItem('token')
+    try {
+
+        const { data } = await axios.post('/user/newpost', formData, {
+            headers: {
+                "Content-Type": 'multipart/form-data',
+                Authorization: `Bearer ${token}`
+            }
+        })
+        console.log(data);
+    } catch (error) {
+        return Promise.reject({ error: 'Post failed' })
     }
 }

@@ -5,7 +5,6 @@ export const LoggedRoute = ({ children }) => {
   if (!token) {
     return <Navigate to={"/"} replace={true}></Navigate>;
   }
-
   return children;
 };
 
@@ -33,3 +32,4 @@ export const AdminIsLoggedRoute = ({ children }) => {
   }
   return children;
 };
+

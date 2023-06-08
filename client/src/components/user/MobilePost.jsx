@@ -26,7 +26,7 @@ const MobilePost = () => {
       sx={{
         height: "75vh",
         overflow: "auto",
-        paddingTop: 1
+        paddingTop: 1,
       }}
     >
       {post.map((posts) => {
@@ -42,7 +42,7 @@ const MobilePost = () => {
               marginBottom: 3,
             }}
           >
-            <Card elevation={0} sx={{ width: 350, height: 500 }}>
+            <Card elevation={0} sx={{ width: 350, height: 500, }}>
               <CardActions sx={{ top: 0, left: 0, padding: 0 }}>
                 <Button sx={{ padding: 1 }}>
                   <Avatar

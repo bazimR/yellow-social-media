@@ -88,7 +88,7 @@ export async function userLogin(req: Request, res: Response) {
         );
         return res.status(201).send({
           Message: "Login succesful",
-          username: user.username,
+          user,
           token,
         });
       } else {

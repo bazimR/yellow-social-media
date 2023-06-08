@@ -9,8 +9,10 @@ import { useEffect, useState } from "react";
 import { Grid } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import PropTypes from "prop-types";
 
-const MobileNav = () => {
+
+const MobileNav = ({setModal,modal}) => {
   const location = useLocation();
   const urlString = location.pathname
   const endPoint = urlString.slice(urlString.lastIndexOf('/') + 1)
@@ -26,7 +28,8 @@ const MobileNav = () => {
     navigate(href);
   };
   const handleChange = (e, newValue) => {
-    setValue(newValue);
+    if(newValue==='create') setModal(!modal)
+    setValue(newValue)
   };
   return (
     <Grid
@@ -77,4 +80,8 @@ const MobileNav = () => {
   );
 };
 
+MobileNav.propTypes = {
+  modal :PropTypes.bool.isRequired,
+  setModal: PropTypes.func.isRequired,
+};
 export default MobileNav;

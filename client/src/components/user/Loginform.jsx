@@ -28,11 +28,12 @@ const Loginform = () => {
         error: <b>Password does not Match</b>,
       });
       userLoginPromise.then((res) => {
-        dispatch(setUser(values.email));
-        let token = res;
+        console.log(res);
+        let token = res.token;
         localStorage.setItem("token", token);
-        navigate("/home")
-      })
+        dispatch(setUser({ username: res.user.username, userId:res.user._id}));
+        navigate("/home");
+      });
     },
   });
 

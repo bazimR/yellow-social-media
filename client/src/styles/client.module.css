@@ -8,3 +8,8 @@ body {
 ::-webkit-scrollbar {
     display: none;
   }
+
+.img{
+    width: 10px;
+    height: 10px;
+}
