@@ -4,6 +4,7 @@ import crypto from "crypto";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { s3, bucketName } from "../database/AWSBUCKET/awsbucket";
 import Post from "../database/models/post.module";
+import User from "../database/models/user.model";
 
 const generateFileName = (bytes = 32) =>
   crypto.randomBytes(bytes).toString("hex");
@@ -28,7 +29,7 @@ export async function newPost(req: Request, res: Response) {
             image: fileName,
             caption: caption,
             userId,
-            Date:Date()
+            Date: Date(),
           });
           post
             .save()
@@ -51,12 +52,19 @@ export async function newPost(req: Request, res: Response) {
   }
 }
 
-
-export async function homePosts(req:Request,res:Response) {
+export async function homePosts(req: Request, res: Response) {
   try {
-    
+    const { userId } = req.body;
+    const friendList = await User.findOne({ _id: userId }).select("friends");
+    friendList?.friends.push(userId);
+    const data = await Post.find({ userId: { $all: friendList?.friends } });
+    if (!data) {
+      res.status(404).send({ error: "cannot get posts" });
+    } else {
+      res.status(201).send(data);
+    }
   } catch (error) {
     console.error(error);
-    res.status(500).send({error,err:'internal server error'})
+    res.status(500).send({ error, err: "internal server error" });
   }
 }

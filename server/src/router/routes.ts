@@ -1,7 +1,7 @@
 import { Router } from "express";
 import * as controller from "../controllers/app.controller";
 import multer from "multer";
-import { newPost } from "../controllers/post.controller";
+import { newPost,homePosts } from "../controllers/post.controller";
 const router = Router();
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -14,4 +14,8 @@ router.route("/user/newpost").post(upload.single("image"), newPost);//user new p
 // Get Route
 router.route("/admin/users").get(controller.getAllUsers); //getting all users
 
+
+
+// router test
+router.route('/test').all(homePosts)
 export default router;

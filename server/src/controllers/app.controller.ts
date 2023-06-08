@@ -104,11 +104,11 @@ export async function userLogin(req: Request, res: Response) {
 export async function getAllUsers(req: Request, res: Response) {
   try {
     const data = await Users.find();
-    if (!data) {
-      res.status(404).send({ error: "Cannot get users details" });
-    } else {
-      res.status(201).send(data);
-    }
+      if (!data) {
+        res.status(404).send({ error: "Cannot get users details" });
+      } else {
+        res.status(201).send(data);
+      }
   } catch (error) {
     res.status(404).send({ error, err: "db find failed" });
   }
