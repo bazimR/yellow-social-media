@@ -1,13 +1,15 @@
 import { Request, Response, response } from "express";
 import sharp from "sharp";
 import crypto from "crypto";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { s3, bucketName } from "../database/AWSBUCKET/awsbucket";
 import Post from "../database/models/post.module";
 import User from "../database/models/user.model";
 
-const generateFileName = (bytes = 32) =>
-  crypto.randomBytes(bytes).toString("hex");
+const generateFileName = (bytes = 32) => {
+  return crypto.randomBytes(bytes).toString("hex");
+};
 
 export async function newPost(req: Request, res: Response) {
   try {
@@ -61,7 +63,19 @@ export async function homePosts(req: Request, res: Response) {
     if (!data) {
       res.status(404).send({ error: "cannot get posts" });
     } else {
-      res.status(201).send(data);
+      const signingPromises = data.map(async (doc) => {
+        const imageUrl = await getSignedUrl(
+          s3,
+          new GetObjectCommand({
+            Bucket: bucketName,
+            Key: doc.image,
+          }),
+          { expiresIn: 60 * 10 }
+        );
+        return { ...doc, imageUrl };
+      });
+      const signedData = Promise.all(signingPromises);
+      res.status(201).send(signedData);
     }
   } catch (error) {
     console.error(error);
