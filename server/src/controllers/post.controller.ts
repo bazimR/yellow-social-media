@@ -6,6 +6,7 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { s3, bucketName } from "../database/AWSBUCKET/awsbucket";
 import Post from "../database/models/post.module";
 import User from "../database/models/user.model";
+import second from 'dotenv'
 
 const generateFileName = (bytes = 32) => {
   return crypto.randomBytes(bytes).toString("hex");
@@ -59,7 +60,7 @@ export async function homePosts(req: Request, res: Response) {
     const { userId } = req.body;
     const friendList = await User.findOne({ _id: userId }).select("friends");
     friendList?.friends.push(userId);
-    const data = await Post.find({ userId: { $all: friendList?.friends } });
+    const data = await Post.find({ $all: friendList?.friends });
     if (!data) {
       res.status(404).send({ error: "cannot get posts" });
     } else {
@@ -67,8 +68,9 @@ export async function homePosts(req: Request, res: Response) {
         const imageUrl = await getSignedUrl(
           s3,
           new GetObjectCommand({
-            Bucket: bucketName,
             Key: doc.image,
+            Bucket: bucketName,
+            Region:
           }),
           { expiresIn: 60 * 10 }
         );
@@ -77,6 +79,16 @@ export async function homePosts(req: Request, res: Response) {
       const signedData = Promise.all(signingPromises);
       res.status(201).send(signedData);
     }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error, err: "internal server error" });
+  }
+}
+
+export async function likePost(req: Request, res: Response) {
+  try {
+    const { userId, postId } = req.body;
+    const isLiked = Post.findOne({_id:postId})
   } catch (error) {
     console.error(error);
     res.status(500).send({ error, err: "internal server error" });
