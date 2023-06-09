@@ -6,7 +6,6 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { s3, bucketName } from "../database/AWSBUCKET/awsbucket";
 import Post from "../database/models/post.module";
 import User from "../database/models/user.model";
-import second from 'dotenv'
 
 const generateFileName = (bytes = 32) => {
   return crypto.randomBytes(bytes).toString("hex");
@@ -70,13 +69,14 @@ export async function homePosts(req: Request, res: Response) {
           new GetObjectCommand({
             Key: doc.image,
             Bucket: bucketName,
-            Region:
           }),
           { expiresIn: 60 * 10 }
         );
-        return { ...doc, imageUrl };
+        doc.imageUrl=imageUrl
+        return doc;
       });
-      const signedData = Promise.all(signingPromises);
+      const signedData = await Promise.all(signingPromises);
+      console.log(signedData);
       res.status(201).send(signedData);
     }
   } catch (error) {

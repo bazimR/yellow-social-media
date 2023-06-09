@@ -22,6 +22,9 @@ const postSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  imageUrl:{
+    type:String
+  },
   Date: {
     type: Date,
   },
