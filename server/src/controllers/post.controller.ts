@@ -62,10 +62,10 @@ export async function newPost(req: Request, res: Response) {
 
 export async function homePosts(req: Request, res: Response) {
   try {
-    const { userId } = req.body;
+    const userId = req.params.userId;
     const friendList = await User.findOne({ _id: userId }).select("friends");
     friendList?.friends.push(userId);
-    const data = await Post.find({ $all: friendList?.friends });
+    const data = await Post.find({ userId: { $in: friendList?.friends } }).sort({Date:-1});
     if (!data) {
       res.status(404).send({ error: "cannot get posts" });
     } else {

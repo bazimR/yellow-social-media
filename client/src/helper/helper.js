@@ -51,3 +51,12 @@ export async function newPost(formData) {
         return Promise.reject({ error: 'Post failed' })
     }
 }
+
+export async function homePost(userId) {
+    try {
+        await axios.get(`/home/homeposts/${userId}`)
+    } catch (error) {
+        console.error(error)
+        return Promise.reject({ error: "fetching posts failed" })
+    }
+}

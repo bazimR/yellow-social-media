@@ -14,7 +14,8 @@ router.route("/admin-login").post(controller.adminLogin); //admin login
 router.route("/user/newpost").post(authToken, upload.single("image"), newPost); //user new post
 // Get Route
 router.route("/admin/users").get(controller.getAllUsers); //getting all users
+router.route("/home/homeposts/:userId").get(homePosts) // user's home posts
 
 // router test
-router.route("/test").all(homePosts);
+router.route("/test").all();
 export default router;
