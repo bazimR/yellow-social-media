@@ -1,31 +1,39 @@
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import { Box, Modal, TextField, Button } from "@mui/material";
+import { Box, Modal, TextField } from "@mui/material";
+import UseAnimations from "react-useanimations";
+import LoadingButton from "@mui/lab/LoadingButton";
 import imageVector from "../../assets/post6.png";
 import PropTypes from "prop-types";
 import { newPost } from "../../helper/helper";
 import { useState } from "react";
-import { useFormik } from "formik";
 import { useSelector } from "react-redux";
+import { useMutation } from "@tanstack/react-query";
+import loading from "react-useanimations/lib/loading";
 const PostModal = ({ modal, setModal }) => {
+  const [caption, setCaption] = useState("");
+  const [file, setFile] = useState(null);
   const user = useSelector((state) => state.user.value);
-  const formik = useFormik({
-    initialValues: {
-      caption: "",
-    },
-    validateOnBlur: false,
-    validateOnChange: false,
-    onSubmit: async (values) => {
-      const formData = new FormData();
-      formData.append("image", file);
-      formData.append("caption", values.caption);
-      formData.append("userId", user.userId);
-
-      newPost(formData);
+  const formData = new FormData();
+  formData.append("image", file);
+  formData.append("caption", caption);
+  formData.append("userId", user._id);
+  const [selectedImg, setSelectedImg] = useState(null);
+  // mutation
+  const createPostMn = useMutation({
+    mutationFn: newPost,
+    onSuccess: () => {
+      setFile(null);
+      setSelectedImg(null);
+      setCaption("");
+      setModal(!modal);
     },
   });
-  const [file, setFile] = useState(null);
-  const [selectedImg, setSelectedImg] = useState(null);
+  // handling submit
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    createPostMn.mutate(formData);
+  };
   const onUpload = (e) => {
     const uploadedFile = e.target.files[0];
     setSelectedImg(URL.createObjectURL(uploadedFile));
@@ -37,7 +45,7 @@ const PostModal = ({ modal, setModal }) => {
     left: "50%",
     transform: "translate(-50%, -50%)",
     width: {
-      lg: "auto",
+      lg: "30%",
     },
     height: "auto",
     bgcolor: "background.paper",
@@ -70,8 +78,8 @@ const PostModal = ({ modal, setModal }) => {
           <Grid item sx={{ width: "100%" }}>
             <Typography
               sx={{
-                fontSize: "2em",
-                fontWeight: 600,
+                fontSize: "1.5em",
+                fontWeight: 400,
                 color: "#004242",
                 padding: 1,
                 display: "flex",
@@ -85,7 +93,9 @@ const PostModal = ({ modal, setModal }) => {
 
           <Grid item>
             <TextField
-              {...formik.getFieldProps("caption")}
+              onChange={(e) => {
+                setCaption(e.target.value);
+              }}
               id="caption"
               name="caption"
               size="small"
@@ -98,6 +108,8 @@ const PostModal = ({ modal, setModal }) => {
           <Grid
             item
             sx={{
+              borderBottom: 1,
+              borderBottomColor: "#c9c9c9",
               width: `20em`,
               height: `20em`,
               display: "flex",
@@ -137,16 +149,19 @@ const PostModal = ({ modal, setModal }) => {
               alignItems: "center",
             }}
           >
-            <Button
-              onClick={formik.handleSubmit}
-              disabled={file ? false : true}
+            <LoadingButton
+              onClick={handleSubmit}
+              disabled={file || createPostMn.isLoading ? false : true}
               type="button"
-              sx={{ width: "23em", margin: 1 }}
-              disableElevation
-              variant="contained"
+              sx={{ margin: 1, fontSize: 20 }}
+              variant="text"
+              loadingIndicator={
+                <UseAnimations animation={loading} strokeColor="#5658d4" size={40} />
+              }
+              loading={createPostMn.isLoading}
             >
               Share
-            </Button>
+            </LoadingButton>
           </Grid>
         </Grid>
       </Box>

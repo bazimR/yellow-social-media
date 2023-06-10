@@ -40,15 +40,14 @@ export async function adminLogin({ email, password }) {
 export async function newPost(formData) {
     const token = localStorage.getItem('token')
     try {
-
-        const { data } = await axios.post('/user/newpost', formData, {
+        await axios.post('/user/newpost', formData, {
             headers: {
                 "Content-Type": 'multipart/form-data',
-                Authorization: `Bearer ${token}`
+                authorization: `Bearer ${token}`
             }
         })
-        console.log(data);
     } catch (error) {
+        console.error(error)
         return Promise.reject({ error: 'Post failed' })
     }
 }

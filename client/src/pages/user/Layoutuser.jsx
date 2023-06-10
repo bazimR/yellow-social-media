@@ -9,7 +9,6 @@ import {
   ListItemText,
   Divider,
   Collapse,
-
 } from "@mui/material";
 import { useConfirm } from "material-ui-confirm";
 import { TiHome } from "@react-icons/all-files/ti/TiHome.esm";
@@ -22,6 +21,8 @@ import { TiPower } from "@react-icons/all-files/ti/TiPower.esm";
 import { useState } from "react";
 import MobileNav from "../../components/user/MobileNav";
 import PostModal from "../../components/user/PostModal";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../redux/userSlice";
 
 const Layoutuser = () => {
   const confirm = useConfirm();
@@ -29,6 +30,7 @@ const Layoutuser = () => {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const handleClick = (index, href) => {
     setSelected(index);
     if (href) {
@@ -47,6 +49,7 @@ const Layoutuser = () => {
     })
       .then(() => {
         localStorage.removeItem("token");
+        dispatch(setUser(""));
         navigate("/");
       })
       .catch(() => {

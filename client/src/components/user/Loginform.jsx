@@ -31,7 +31,7 @@ const Loginform = () => {
         console.log(res);
         let token = res.token;
         localStorage.setItem("token", token);
-        dispatch(setUser({ username: res.user.username, userId:res.user._id}));
+        dispatch(setUser(res.user));
         navigate("/home");
       });
     },
@@ -64,6 +64,7 @@ const Loginform = () => {
           variant="filled"
           name="password"
           label="Password"
+          type="password"
           fullWidth
         />
       </Grid>

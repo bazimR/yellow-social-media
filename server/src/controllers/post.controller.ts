@@ -3,10 +3,13 @@ import sharp from "sharp";
 import crypto from "crypto";
 import { PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { s3, bucketName } from "../database/AWSBUCKET/awsbucket";
+import { s3 } from "../database/AWSBUCKET/awsbucket";
 import Post from "../database/models/post.module";
 import User from "../database/models/user.model";
+import dotenv from "dotenv";
+dotenv.config();
 
+const bucketName = process.env.BUCKET as string;
 const generateFileName = (bytes = 32) => {
   return crypto.randomBytes(bytes).toString("hex");
 };
@@ -16,7 +19,9 @@ export async function newPost(req: Request, res: Response) {
     const file = req.file;
     const { caption, userId } = req.body;
     sharp(file?.buffer)
-      .resize({ height: 1080, width: 1080, fit: "contain" })
+      .resize({ height: 1000, width: 1000, fit: "contain" }) // Resize to desired dimensions
+      .ensureAlpha() // Ensure the image has an alpha channel
+      .flatten({ background: { r: 255, g: 255, b: 255, alpha: 1 } }) // Flatten the image and remove alpha transparency
       .toBuffer()
       .then((Data) => {
         const fileName = generateFileName();
@@ -36,6 +41,7 @@ export async function newPost(req: Request, res: Response) {
           post
             .save()
             .then((result) => {
+              console.log("success");
               res.status(201).send({ result, Message: "Post successful" });
             })
             .catch((error) => {
@@ -72,11 +78,10 @@ export async function homePosts(req: Request, res: Response) {
           }),
           { expiresIn: 60 * 10 }
         );
-        doc.imageUrl=imageUrl
+        doc.imageUrl = imageUrl;
         return doc;
       });
       const signedData = await Promise.all(signingPromises);
-      console.log(signedData);
       res.status(201).send(signedData);
     }
   } catch (error) {
@@ -88,7 +93,13 @@ export async function homePosts(req: Request, res: Response) {
 export async function likePost(req: Request, res: Response) {
   try {
     const { userId, postId } = req.body;
-    const isLiked = Post.findOne({_id:postId})
+    Post.findOne({ _id: postId }).then((post) => {
+      if (post?.likes.includes(userId)) {
+        Post.updateOne({ _id: postId }, { $pull: { likes: userId } });
+      } else {
+        Post.updateOne({ _id: postId }, { $addToSet: { likes: userId } });
+      }
+    });
   } catch (error) {
     console.error(error);
     res.status(500).send({ error, err: "internal server error" });

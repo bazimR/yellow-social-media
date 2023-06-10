@@ -1,4 +1,3 @@
-import test from "../../assets/test.jpg";
 import {
   Card,
   CardActionArea,
@@ -7,8 +6,10 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
+import { useSelector } from "react-redux";
 import { TiPlus } from "@react-icons/all-files/ti/TiPlus.esm";
 const Story = () => {
+  const {value} = useSelector(state=>state.user)
   const story = [
     "robin",
     "rishal",
@@ -31,7 +32,7 @@ const Story = () => {
       sx={{
         backgroundColor: "",
         width: "100%",
-        height: { xs:"25",md: "20vh", lg: "25vh" },
+        height: { xs: "25", md: "20vh", lg: "25vh" },
         display: "flex",
         flexDirection: "row",
         justifyContent: "flex-start",
@@ -66,7 +67,7 @@ const Story = () => {
                   borderColor: "white",
                 }}
                 alt="Remy Sharp"
-                src={test}
+                src={value.profile?value.profile:""}
                 variant="rounded"
               />
               <Typography

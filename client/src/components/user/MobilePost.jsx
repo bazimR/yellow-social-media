@@ -26,7 +26,8 @@ const MobilePost = () => {
       sx={{
         height: "75vh",
         overflow: "auto",
-        paddingTop: 1,
+        paddingTop: 2,
+        paddingBottom:3,
       }}
     >
       {post.map((posts) => {

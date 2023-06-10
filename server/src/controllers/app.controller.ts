@@ -1,8 +1,11 @@
 import Users from "../database/models/user.model";
 import bcrypt, { hash } from "bcrypt";
 import { Request, Response } from "express";
-import Jwt from "jsonwebtoken";
-import { config } from "../config";
+import Jwt, { Secret } from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
+const SECRET_JWT: Secret = process.env.SECRET_JWT as Secret;
+
 
 // Post:api/signup
 export async function userSignup(req: Request, res: Response) {
@@ -78,17 +81,18 @@ export async function userLogin(req: Request, res: Response) {
     Users.findOne({ email: email }).then(async (user: any) => {
       const passChecks = await bcrypt.compare(password, user?.password);
       if (passChecks) {
+        const { password, ...rest } = user.toObject();
         const token = Jwt.sign(
           {
             userId: user._id,
             username: user.username,
           },
-          config.SECRET,
+          SECRET_JWT,
           { expiresIn: "24h" }
         );
         return res.status(201).send({
           Message: "Login succesful",
-          user,
+          user: rest,
           token,
         });
       } else {
@@ -104,11 +108,11 @@ export async function userLogin(req: Request, res: Response) {
 export async function getAllUsers(req: Request, res: Response) {
   try {
     const data = await Users.find();
-      if (!data) {
-        res.status(404).send({ error: "Cannot get users details" });
-      } else {
-        res.status(201).send(data);
-      }
+    if (!data) {
+      res.status(404).send({ error: "Cannot get users details" });
+    } else {
+      res.status(201).send(data);
+    }
   } catch (error) {
     res.status(404).send({ error, err: "db find failed" });
   }
@@ -128,7 +132,7 @@ export async function adminLogin(req: Request, res: Response) {
           email,
           password,
         },
-        config.SECRET,
+        SECRET_JWT,
         { expiresIn: "24h" }
       );
       res.status(200).send({
