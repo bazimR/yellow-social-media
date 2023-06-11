@@ -17,11 +17,16 @@ const generateFileName = (bytes = 32) => {
 export async function newPost(req: Request, res: Response) {
   try {
     const file = req.file;
-    const { caption, userId } = req.body;
+    const { caption, userId, username } = req.body;
     sharp(file?.buffer)
-      .resize({ height: 1000, width: 1000, fit: "contain" }) // Resize to desired dimensions
-      .ensureAlpha() // Ensure the image has an alpha channel
-      .flatten({ background: { r: 255, g: 255, b: 255, alpha: 1 } }) // Flatten the image and remove alpha transparency
+      .resize({ height: 1000, width: 1000, fit: "fill" }) // Resize to desired dimensions
+      .extend({
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        background: { r: 255, g: 255, b: 255, alpha: 1 }, // Set the background color to white
+      })
       .toBuffer()
       .then((Data) => {
         const fileName = generateFileName();
@@ -36,12 +41,12 @@ export async function newPost(req: Request, res: Response) {
             image: fileName,
             caption: caption,
             userId,
+            username,
             Date: Date(),
           });
           post
             .save()
             .then((result) => {
-              console.log("success");
               res.status(201).send({ result, Message: "Post successful" });
             })
             .catch((error) => {
@@ -65,7 +70,9 @@ export async function homePosts(req: Request, res: Response) {
     const userId = req.params.userId;
     const friendList = await User.findOne({ _id: userId }).select("friends");
     friendList?.friends.push(userId);
-    const data = await Post.find({ userId: { $in: friendList?.friends } }).sort({Date:-1});
+    const data = await Post.find({ userId: { $in: friendList?.friends } }).sort(
+      { Date: -1 }
+    );
     if (!data) {
       res.status(404).send({ error: "cannot get posts" });
     } else {
@@ -78,7 +85,20 @@ export async function homePosts(req: Request, res: Response) {
           }),
           { expiresIn: 60 * 10 }
         );
+        // here
         doc.imageUrl = imageUrl;
+        const user = await User.findById(doc?.userId);
+        if (user?.profile) {
+          const profileImg = await getSignedUrl(
+            s3,
+            new GetObjectCommand({
+              Key: user.profile,
+              Bucket: bucketName,
+            }),
+            { expiresIn: 60 * 10 }
+          );
+          doc.set("profileUrl", profileImg, { strict: false });
+        }
         return doc;
       });
       const signedData = await Promise.all(signingPromises);
@@ -92,12 +112,22 @@ export async function homePosts(req: Request, res: Response) {
 
 export async function likePost(req: Request, res: Response) {
   try {
-    const { userId, postId } = req.body;
-    Post.findOne({ _id: postId }).then((post) => {
+    const postId = req.params.postId;
+    const { userId } = req.body;
+    await Post.findOne({ _id: postId }).then(async (post) => {
+      console.log(userId);
+      console.log(post?.likes.includes(userId));
       if (post?.likes.includes(userId)) {
-        Post.updateOne({ _id: postId }, { $pull: { likes: userId } });
+        await Post.updateOne({ _id: postId }, { $pull: { likes: userId } });
+        console.log("removed");
+        res.status(201).send({ Message: "like removed" });
       } else {
-        Post.updateOne({ _id: postId }, { $addToSet: { likes: userId } });
+        await Post.findOneAndUpdate(
+          { _id: postId },
+          { $addToSet: { likes: userId } }
+        );
+        console.log("added");
+        res.status(201).send({ Message: "like added" });
       }
     });
   } catch (error) {

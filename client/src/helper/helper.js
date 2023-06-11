@@ -3,7 +3,6 @@ axios.defaults.baseURL = import.meta.env.VITE_SERVER_DOMAIN
 
 
 
-
 export async function userSignup(creds) {
     try {
         const { data: { Message }, status } = await axios.post(`/signup`, creds);
@@ -43,7 +42,7 @@ export async function newPost(formData) {
         await axios.post('/user/newpost', formData, {
             headers: {
                 "Content-Type": 'multipart/form-data',
-                authorization: `Bearer ${token}`
+                "authorization": `Bearer ${token}`
             }
         })
     } catch (error) {
@@ -54,9 +53,25 @@ export async function newPost(formData) {
 
 export async function homePost(userId) {
     try {
-        await axios.get(`/home/homeposts/${userId}`)
+        const { data } = await axios.get(`/home/homeposts/${userId}`)
+        return data
     } catch (error) {
         console.error(error)
         return Promise.reject({ error: "fetching posts failed" })
+    }
+}
+
+export async function likePost({ postId, userId }) {
+    const token = await localStorage.getItem('token');
+    try {
+        await axios.put(`/post/like/${postId}`, { userId }, {
+            headers: {
+                "Content-Type": "application/json",
+                "authorization": `Bearer ${token}`,
+            },
+        });
+    } catch (error) {
+        console.error(error);
+        return Promise.reject({ error: "Liking posts failed" });
     }
 }

@@ -18,6 +18,7 @@ const PostModal = ({ modal, setModal }) => {
   formData.append("image", file);
   formData.append("caption", caption);
   formData.append("userId", user._id);
+  formData.append("username", user.username);
   const [selectedImg, setSelectedImg] = useState(null);
   // mutation
   const createPostMn = useMutation({
@@ -156,7 +157,11 @@ const PostModal = ({ modal, setModal }) => {
               sx={{ margin: 1, fontSize: 20 }}
               variant="text"
               loadingIndicator={
-                <UseAnimations animation={loading} strokeColor="#5658d4" size={40} />
+                <UseAnimations
+                  animation={loading}
+                  strokeColor="#5658d4"
+                  size={40}
+                />
               }
               loading={createPostMn.isLoading}
             >

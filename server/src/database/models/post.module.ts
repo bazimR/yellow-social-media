@@ -4,6 +4,10 @@ const postSchema = new Schema({
   caption: {
     type: String,
   },
+  username: {
+    type: String,
+    required: true,
+  },
   image: {
     type: String,
     required: true,
@@ -13,17 +17,19 @@ const postSchema = new Schema({
     required: true,
   },
   likes: {
-    type: Array,
+    type: [String],
+    unique: true,
   },
   reports: {
-    type: Array,
+    type: [String],
+    unique: true,
   },
   isBlocked: {
     type: Boolean,
     default: false,
   },
-  imageUrl:{
-    type:String
+  imageUrl: {
+    type: String,
   },
   Date: {
     type: Date,

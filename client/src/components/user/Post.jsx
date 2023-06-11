@@ -12,14 +12,26 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { BsChatSquareDots } from "@react-icons/all-files/bs/BsChatSquareDots.esm";
 import { FaRegBookmark } from "@react-icons/all-files/fa/FaRegBookmark.esm";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { homePost, likePost } from "../../helper/helper";
+import { useSelector } from "react-redux";
 import { useState } from "react";
 
 const Post = () => {
-  const post = ["qe", "wz", "sz", "fz", "ssz", "dz"];
-  const [like, setLike] = useState(false);
-  const handleLike = () => {
-    setLike(!like);
+  const userId = useSelector((state) => state.user.value._id);
+  const { data, isLoading } = useQuery(["posts", userId], () =>
+    homePost(userId)
+  );
+  console.log(data);
+  const [post, setPost] = useState(data)
+  setPost(data)
+  const likeMn = useMutation({
+    mutationFn: likePost,
+  });
+  const handleLike = (postId, userId) => {
+    likeMn.mutate({ postId, userId });
   };
+  if (isLoading) return <h1>loading</h1>;
   return (
     <Grid
       container
@@ -35,7 +47,7 @@ const Post = () => {
           <Grid
             item
             xs={12}
-            key={posts}
+            key={posts._id}
             sx={{
               display: "flex",
               justifyContent: "center",
@@ -43,11 +55,12 @@ const Post = () => {
               marginBottom: 2,
             }}
           >
-            <Card elevation={0} sx={{ width: 400, height: 580 }}>
+            <Card elevation={0} sx={{ width: 400, height: 550 }}>
               <CardActions sx={{ top: 0, left: 0, padding: 0 }}>
                 <Button sx={{ padding: 1 }}>
                   <Avatar
                     alt="Remy Sharp"
+                    src=""
                     sx={{
                       width: 35,
                       height: 35,
@@ -59,22 +72,23 @@ const Post = () => {
                 <Typography
                   sx={{
                     padding: 0,
-                    marginRight: 23,
+                    marginRight: 0,
                     fontSize: "0.9em",
-                    fontWeight: "fontWeightRegular",
-                    color: "black",
+                    fontWeight: "fontWeightMedium",
+                    color: "primary.main",
+                    cursor: "default",
                   }}
-                  color="initial"
                 >
-                  username
+                  {posts.username}
                 </Typography>
-                <Button sx={{ marginLeft: "auto" }}>Report</Button>
               </CardActions>
               <CardContent
                 sx={{
-                  backgroundColor: "red",
+                  backgroundImage: `url(${posts.imageUrl})`,
+                  backgroundSize: "contain",
+                  backgroundPosition: "center",
                   width: 400,
-                  height: 430,
+                  height: 400,
                   padding: 0,
                 }}
               ></CardContent>
@@ -90,8 +104,12 @@ const Post = () => {
                   }}
                 >
                   <Grid item>
-                    <Typography variant="body1" color="initial">
-                      Post caption
+                    <Typography
+                      variant="body1"
+                      color="secondary.darker"
+                      sx={{ cursor: "default" }}
+                    >
+                      {posts.caption}
                     </Typography>
                   </Grid>
                   <Grid
@@ -99,26 +117,33 @@ const Post = () => {
                     sx={{ display: "flex", justifyContent: "space-between" }}
                   >
                     <IconButton
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleLike(posts._id, userId);
+                      }}
                       sx={{
-                        color: `${like ? "initial" : "primary.main"}`,
+                        color: `${
+                          posts.likes?.includes(userId)
+                            ? "primary.main"
+                            : "primary.main"
+                        }`,
                         padding: 0,
                       }}
                       aria-label="like"
-                      onClick={() => handleLike()}
                     >
-                      {like ? (
-                        <FavoriteBorderIcon
+                      {posts.likes.includes(userId) ? (
+                        <FavoriteIcon
                           style={{ width: "35px", height: "35px" }}
                         />
                       ) : (
-                        <FavoriteIcon
+                        <FavoriteBorderIcon
                           style={{ width: "35px", height: "35px" }}
                         />
                       )}
                     </IconButton>
                     <IconButton
                       aria-label="comments"
-                      sx={{ color: "initial", marginLeft: 1 }}
+                      sx={{ color: "secondary.darker", marginLeft: 1 }}
                     >
                       <BsChatSquareDots
                         style={{ width: "30px", height: "30px" }}
@@ -126,7 +151,7 @@ const Post = () => {
                     </IconButton>
                     <IconButton
                       aria-label="comments"
-                      sx={{ color: "initial", marginLeft: 1 }}
+                      sx={{ color: "secondary.darker", marginLeft: 1 }}
                     >
                       <FaRegBookmark
                         style={{ width: "30px", height: "30px" }}

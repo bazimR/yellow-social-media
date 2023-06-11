@@ -1,7 +1,7 @@
 import { Router } from "express";
 import * as controller from "../controllers/app.controller";
 import multer from "multer";
-import { newPost, homePosts } from "../controllers/post.controller";
+import { newPost, homePosts ,likePost} from "../controllers/post.controller";
 import { authToken } from "../middleware/auth.token";
 const router = Router();
 const storage = multer.memoryStorage();
@@ -15,7 +15,8 @@ router.route("/user/newpost").post(authToken, upload.single("image"), newPost); 
 // Get Route
 router.route("/admin/users").get(controller.getAllUsers); //getting all users
 router.route("/home/homeposts/:userId").get(homePosts) // user's home posts
-
+// Put Route
+router.route('/post/like/:postId').put(authToken,likePost)
 // router test
 router.route("/test").all();
 export default router;
