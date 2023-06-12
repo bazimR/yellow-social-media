@@ -12,36 +12,46 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { BsChatSquareDots } from "@react-icons/all-files/bs/BsChatSquareDots.esm";
 import { FaRegBookmark } from "@react-icons/all-files/fa/FaRegBookmark.esm";
-import { useMutation, QueryClient,useQuery } from "@tanstack/react-query";
+import { useMutation,useInfiniteQuery } from "@tanstack/react-query";
 import { homePost, likePost } from "../../helper/helper";
 import { useSelector } from "react-redux";
-import { useState } from "react";
 
 const Post = () => {
   const userId = useSelector((state) => state.user.value._id);
-  const [post, setPost] = useState(null);
-  const queryClient = new QueryClient()
-
-  const { isLoading } = useQuery(["posts", userId], () =>
-    homePost(userId),
-    {
-      onSuccess: (data) => {
-        setPost(data);
-      }
-    }
+  const {
+    data,
+    isLoading,
+  } = useInfiniteQuery({
+    queryKey:["posts"],
+    getNextPageParam: prevData => prevData.nextPage,
+    queryFn:({pageParams=1})=> homePost(userId,pageParams)
+  }
+  // , ({ pageParams=1 }) =>
+  //   homePost(userId, pageParams)
+  // , {
+  //   getNextPageParam: (lastPage) => {
+  //     const currentPage = lastPage[lastPage.length - 1];
+  //     if (currentPage.page < currentPage.total_pages) {
+  //       return currentPage.page + 1;
+  //     }
+  //     return undefined;
+  //   },
+  // }
   );
+
+console.log(data)
+const handleLoad = () => {
+  console.log(isLoading);
+};
   const likeMn = useMutation({
     mutationKey:["posts"],
     mutationFn: likePost,
-    onSuccess: () => {
-      // Perform the refetch of data
-      queryClient.invalidateQueries(["posts"]);
-    },
   });
   const handleLike = (postId, userId) => {
     likeMn.mutate({ postId, userId });
   };
-  if (isLoading||post===null) return <h1>loading</h1>;
+  if (isLoading) return <h1>loading</h1>;
+
   return (
     <Grid
       container
@@ -52,7 +62,8 @@ const Post = () => {
         paddingTop: 1,
       }}
     >
-      {post.map((posts) => {
+      {data.pages.map((page) =>
+        page.map((posts) => {
         return (
           <Grid
             item
@@ -173,7 +184,8 @@ const Post = () => {
             </Card>
           </Grid>
         );
-      })}
+      }))}
+      <><button disabled={ isLoading}onClick={handleLoad}>load more</button></>
     </Grid>
   );
 };

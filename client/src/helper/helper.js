@@ -51,9 +51,13 @@ export async function newPost(formData) {
     }
 }
 
-export async function homePost(userId) {
+export async function homePost(userId,pageNumber) {
     try {
-        const { data } = await axios.get(`/home/homeposts/${userId}`)
+        const { data } = await axios.get(`/home/homeposts/${userId}`,{
+            params:{
+                page:pageNumber
+            }
+        })
         return data
     } catch (error) {
         console.error(error)
@@ -62,7 +66,7 @@ export async function homePost(userId) {
 }
 
 export async function likePost({ postId, userId }) {
-    const token = await localStorage.getItem('token');
+    const token = localStorage.getItem('token');
     try {
         await axios.put(`/post/like/${postId}`, { userId }, {
             headers: {
