@@ -12,26 +12,36 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { BsChatSquareDots } from "@react-icons/all-files/bs/BsChatSquareDots.esm";
 import { FaRegBookmark } from "@react-icons/all-files/fa/FaRegBookmark.esm";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, QueryClient,useQuery } from "@tanstack/react-query";
 import { homePost, likePost } from "../../helper/helper";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 
 const Post = () => {
   const userId = useSelector((state) => state.user.value._id);
-  const { data, isLoading } = useQuery(["posts", userId], () =>
-    homePost(userId)
+  const [post, setPost] = useState(null);
+  const queryClient = new QueryClient()
+
+  const { isLoading } = useQuery(["posts", userId], () =>
+    homePost(userId),
+    {
+      onSuccess: (data) => {
+        setPost(data);
+      }
+    }
   );
-  console.log(data);
-  const [post, setPost] = useState(data)
-  setPost(data)
   const likeMn = useMutation({
+    mutationKey:["posts"],
     mutationFn: likePost,
+    onSuccess: () => {
+      // Perform the refetch of data
+      queryClient.invalidateQueries(["posts"]);
+    },
   });
   const handleLike = (postId, userId) => {
     likeMn.mutate({ postId, userId });
   };
-  if (isLoading) return <h1>loading</h1>;
+  if (isLoading||post===null) return <h1>loading</h1>;
   return (
     <Grid
       container

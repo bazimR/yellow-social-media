@@ -19,13 +19,13 @@ export async function newPost(req: Request, res: Response) {
     const file = req.file;
     const { caption, userId, username } = req.body;
     sharp(file?.buffer)
-      .resize({ height: 1000, width: 1000, fit: "fill" }) // Resize to desired dimensions
+      .resize({ height: 1000, width: 1000, fit: "cover" }) // Resize to desired dimensions
       .extend({
         top: 0,
         bottom: 0,
         left: 0,
         right: 0,
-        background: { r: 255, g: 255, b: 255, alpha: 1 }, // Set the background color to white
+        background: { r: 255, g: 255, b: 255, alpha: 0.5 }, // Set the background color to white
       })
       .toBuffer()
       .then((Data) => {

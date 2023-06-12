@@ -17,12 +17,10 @@ const postSchema = new Schema({
     required: true,
   },
   likes: {
-    type: [String],
-    unique: true,
+    type: Array,
   },
   reports: {
-    type: [String],
-    unique: true,
+    type: Array,
   },
   isBlocked: {
     type: Boolean,
