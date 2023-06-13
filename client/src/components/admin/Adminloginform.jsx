@@ -26,7 +26,6 @@ const Loginform = () => {
         error: <b>Password does not Match</b>,
       });
       adminLoginPromise.then((res) => {
-        console.log(res);
         let ADMINTOKEN = res;
         localStorage.setItem("ADMINTOKEN", ADMINTOKEN);
         navigate("/admin");

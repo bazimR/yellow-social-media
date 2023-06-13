@@ -68,7 +68,7 @@ export async function homePost(userId,pageNumber) {
 export async function likePost({ postId, userId }) {
     const token = localStorage.getItem('token');
     try {
-        await axios.put(`/post/like/${postId}`, { userId }, {
+      return  await axios.put(`/post/like/${postId}`, { userId }, {
             headers: {
                 "Content-Type": "application/json",
                 "authorization": `Bearer ${token}`,
@@ -76,6 +76,6 @@ export async function likePost({ postId, userId }) {
         });
     } catch (error) {
         console.error(error);
-        return Promise.reject({ error: "Liking posts failed" });
+        return Promise.reject({ error,msg: "Liking posts failed" });
     }
 }

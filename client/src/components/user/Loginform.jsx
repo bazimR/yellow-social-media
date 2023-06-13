@@ -28,7 +28,6 @@ const Loginform = () => {
         error: <b>Password does not Match</b>,
       });
       userLoginPromise.then((res) => {
-        console.log(res);
         let token = res.token;
         localStorage.setItem("token", token);
         dispatch(setUser(res.user));

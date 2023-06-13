@@ -1,7 +1,7 @@
 import { Request, Response, response } from "express";
 import sharp from "sharp";
 import crypto from "crypto";
-import { PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
+import { PutObjectCommand, GetObjectCommand, FileHeaderInfo } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { s3 } from "../database/AWSBUCKET/awsbucket";
 import Post from "../database/models/post.module";
@@ -117,20 +117,18 @@ export async function likePost(req: Request, res: Response) {
   try {
     const postId = req.params.postId;
     const { userId } = req.body;
+    console.log("object");
     await Post.findOne({ _id: postId }).then(async (post) => {
-      console.log(userId);
       console.log(post?.likes.includes(userId));
       if (post?.likes.includes(userId)) {
         await Post.updateOne({ _id: postId }, { $pull: { likes: userId } });
-        console.log("removed");
-        res.status(201).send({ Message: "like removed" });
+        res.status(201).send({ Message: "like removed" ,value:-1});
       } else {
         await Post.findOneAndUpdate(
           { _id: postId },
           { $addToSet: { likes: userId } }
         );
-        console.log("added");
-        res.status(201).send({ Message: "like added" });
+        res.status(201).send({ Message: "like added" ,value:1});
       }
     });
   } catch (error) {
