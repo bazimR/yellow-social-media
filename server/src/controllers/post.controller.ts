@@ -86,7 +86,7 @@ export async function homePosts(req: Request, res: Response) {
             Key: doc.image,
             Bucket: bucketName,
           }),
-          { expiresIn: 60 * 10 }
+          { expiresIn: 60 * 30 }
         );
         // here
         doc.imageUrl = imageUrl;
