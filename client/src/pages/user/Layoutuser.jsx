@@ -125,7 +125,6 @@ const Layoutuser = () => {
             <Box
               sx={{
                 width: "100%",
-                maxWidth: 360,
                 bgcolor: "secondary.light",
                 borderRadius: "1em",
               }}
