@@ -28,8 +28,10 @@ export async function addComment(req: Request, res: Response) {
 export async function getComments(req: Request, res: Response) {
   try {
     const { postId } = req.params;
-    Comment.find({ postId, body: { $ne: "" } })
+    console.log(postId);
+    Comment.find({postId})
       .then((result) => {
+        console.log(result ,"check");
         res.status(201).send(result);
       })
       .catch((error) => {

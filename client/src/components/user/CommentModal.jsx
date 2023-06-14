@@ -52,13 +52,16 @@ const CommentModal = () => {
   const modal = useSelector((state) => state.modal.value);
   const postId = posts._id;
   // geting comments
-  const { isLoading, data, isError } = useQuery({
+  const { status, data } = useQuery({
+    enabled: modal,
     queryKey: ["comments", postId],
     queryFn: () => {
-      getComments(postId);
+      return getComments(postId);
     },
-    placeholderData: 23,
   });
+  if (status === "loading") {
+    return <h1>loading</h1>;
+  }
   return (
     <Modal
       sx={{ display: { xs: "none", lg: "flex" } }}
@@ -156,11 +159,25 @@ const CommentModal = () => {
             <Grid item>
               <Divider />
               <List sx={{ height: 360, overflow: "auto" }}>
-                {data === 0 ? (
-                  data?.map((doc) => {
+                {data.length === 0 ? (
+                  <Typography
+                    component={"span"}
+                    variant="body2"
+                    sx={{
+                      textAlign: "center",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      marginY:20
+                    }}
+                  >
+                    Be the first one comment...
+                  </Typography>
+                ) : (
+                  data.map((doc) => {
                     return (
-                      <>
-                        <ListItem disableGutters key={doc._id}>
+                      <div key={doc._id}>
+                        <ListItem disableGutters>
                           <ListItemAvatar>
                             <Avatar
                               alt="user"
@@ -174,18 +191,23 @@ const CommentModal = () => {
                           <ListItemText
                             sx={{ display: "inline" }}
                             primary={
-                              <Typography variant="body1" color="initial">
+                              <Typography
+                                component={"span"}
+                                variant="body1"
+                                color="initial"
+                              >
                                 username
                               </Typography>
                             }
                             secondary={
                               <>
                                 <Typography
+                                  component={"span"}
                                   sx={{
                                     overflowWrap: "break-word", // Set the overflowWrap property
                                     wordBreak: "break-word", // Add wordBreak property for better support
+                                    fontSize: "12px",
                                   }}
-                                  variant="body2"
                                   color="initial"
                                 >
                                   subject
@@ -195,11 +217,9 @@ const CommentModal = () => {
                           />
                         </ListItem>
                         <Divider />
-                      </>
+                      </div>
                     );
                   })
-                ) : (
-                  <Typography variant="body2" sx={{ textAlign: "center",margin:15 }}>Be the first one comment...</Typography>
                 )}
               </List>
             </Grid>

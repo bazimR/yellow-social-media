@@ -23,6 +23,8 @@ import MobileNav from "../../components/user/MobileNav";
 import PostModal from "../../components/user/PostModal";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../redux/userSlice";
+import { setPostRedux } from "../../redux/postSlice";
+import { setModalComment } from "../../redux/commentModelSlice";
 
 const Layoutuser = () => {
   const confirm = useConfirm();
@@ -50,6 +52,8 @@ const Layoutuser = () => {
       .then(() => {
         localStorage.removeItem("token");
         dispatch(setUser(""));
+        dispatch(setPostRedux(""))
+        dispatch(setModalComment(false))
         navigate("/");
       })
       .catch(() => {
