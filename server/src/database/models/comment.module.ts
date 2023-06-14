@@ -12,8 +12,16 @@ const commentSchema = new Schema({
   body: {
     type: String,
     required: true,
-    },
-    Date: {
-      type:Date
+  },
+  Date: {
+    type: Date,
+  },
+  isBlocked: {
+    type: Boolean,
+    default:false,
   }
 });
+
+const Comment = model("comment", commentSchema, "comments");
+
+export default Comment;
