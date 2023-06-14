@@ -27,18 +27,18 @@ export async function addComment(req: Request, res: Response) {
 
 export async function getComments(req: Request, res: Response) {
   try {
-    const { postId } = req.query;
-    Comment.find({ postId })
+    const { postId } = req.params;
+    Comment.find({ postId, body: { $ne: "" } })
       .then((result) => {
         res.status(201).send(result);
       })
       .catch((error) => {
         console.error(error);
-        res.status(404).send({ error, err: "comments not found" });
+        res.status(404).send({ error, err: "Comments not found" });
       });
   } catch (error) {
     console.error(error);
-    res.status(500).send("internal server error");
+    res.status(500).send("Internal server error");
   }
 }
 

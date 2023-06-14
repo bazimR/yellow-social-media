@@ -51,11 +51,11 @@ export async function newPost(formData) {
     }
 }
 
-export async function homePost(userId,pageNumber) {
+export async function homePost(userId, pageNumber) {
     try {
-        const { data } = await axios.get(`/home/homeposts/${userId}`,{
-            params:{
-                page:pageNumber
+        const { data } = await axios.get(`/home/homeposts/${userId}`, {
+            params: {
+                page: pageNumber
             }
         })
         return data
@@ -68,7 +68,7 @@ export async function homePost(userId,pageNumber) {
 export async function likePost({ postId, userId }) {
     const token = localStorage.getItem('token');
     try {
-      return  await axios.put(`/post/like/${postId}`, { userId }, {
+        return await axios.put(`/post/like/${postId}`, { userId }, {
             headers: {
                 "Content-Type": "application/json",
                 "authorization": `Bearer ${token}`,
@@ -76,6 +76,22 @@ export async function likePost({ postId, userId }) {
         });
     } catch (error) {
         console.error(error);
-        return Promise.reject({ error,msg: "Liking posts failed" });
+        return Promise.reject({ error, msg: "Liking posts failed" });
+    }
+}
+
+export async function getComments(postId) {
+    const token = localStorage.getItem('token');
+    try {
+        const { data } = await axios.get(`/user/comments/${postId}`, {
+            headers: {
+                "Content-Type": "application/json",
+                "authorization": `Bearer ${token}`,
+            }
+        },)
+        return data
+    } catch (error) {
+        console.error(error);
+        return Promise.reject({ error, msg: "getting comments failed" });
     }
 }

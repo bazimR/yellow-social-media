@@ -17,7 +17,7 @@ const Post = () => {
     queryKey:["posts"],
     getNextPageParam: prevData => prevData.nextPage,
     queryFn:({pageParams=1})=> homePost(userId,pageParams),
-    refetchOnWindowFocus:false
+    refetchOnWindowFocus: false,
 
   }
   );
@@ -46,7 +46,6 @@ const handleLoad = () => {
           <PostLg posts={posts} key={posts._id}/>
         );
       }))}
-      <><button disabled={ isLoading}onClick={handleLoad}>load more</button></>
     </Grid>
   );
 };

@@ -17,6 +17,8 @@ import { setModalComment } from "../../redux/commentModelSlice";
 // import { RiBookmarkFill } from "@react-icons/all-files/ri/RiBookmarkFill.esm"//when saved done
 
 import { useDispatch, useSelector } from "react-redux";
+import { useQuery } from "@tanstack/react-query";
+import { getComments } from "../../helper/helper";
 
 const CommentModal = () => {
   const dispatch = useDispatch();
@@ -48,6 +50,15 @@ const CommentModal = () => {
     dispatch(setModalComment(false));
   };
   const modal = useSelector((state) => state.modal.value);
+  const postId = posts._id;
+  // geting comments
+  const { isLoading, data, isError } = useQuery({
+    queryKey: ["comments", postId],
+    queryFn: () => {
+      getComments(postId);
+    },
+    placeholderData: 23,
+  });
   return (
     <Modal
       sx={{ display: { xs: "none", lg: "flex" } }}
@@ -145,251 +156,51 @@ const CommentModal = () => {
             <Grid item>
               <Divider />
               <List sx={{ height: 360, overflow: "auto" }}>
-                <ListItem disableGutters>
-                  <ListItemAvatar>
-                    <Avatar
-                      alt="user"
-                      src=""
-                      sx={{
-                        width: 35,
-                        height: 35,
-                      }}
-                    />
-                  </ListItemAvatar>
-                  <ListItemText
-                    sx={{ display: "inline" }}
-                    primary={
-                      <Typography variant="body1" color="initial">
-                        username
-                      </Typography>
-                    }
-                    secondary={
+                {data === 0 ? (
+                  data?.map((doc) => {
+                    return (
                       <>
-                        <Typography
-                          sx={{
-                            overflowWrap: "break-word", // Set the overflowWrap property
-                            wordBreak: "break-word", // Add wordBreak property for better support
-                          }}
-                          variant="body2"
-                          color="initial"
-                        >
-                          subject
-                        </Typography>
+                        <ListItem disableGutters key={doc._id}>
+                          <ListItemAvatar>
+                            <Avatar
+                              alt="user"
+                              src=""
+                              sx={{
+                                width: 35,
+                                height: 35,
+                              }}
+                            />
+                          </ListItemAvatar>
+                          <ListItemText
+                            sx={{ display: "inline" }}
+                            primary={
+                              <Typography variant="body1" color="initial">
+                                username
+                              </Typography>
+                            }
+                            secondary={
+                              <>
+                                <Typography
+                                  sx={{
+                                    overflowWrap: "break-word", // Set the overflowWrap property
+                                    wordBreak: "break-word", // Add wordBreak property for better support
+                                  }}
+                                  variant="body2"
+                                  color="initial"
+                                >
+                                  subject
+                                </Typography>
+                              </>
+                            }
+                          />
+                        </ListItem>
+                        <Divider />
                       </>
-                    }
-                  />
-                </ListItem>
-                <Divider />
-                <ListItem disableGutters>
-                  <ListItemAvatar>
-                    <Avatar
-                      alt="user"
-                      src=""
-                      sx={{
-                        width: 35,
-                        height: 35,
-                      }}
-                    />
-                  </ListItemAvatar>
-                  <ListItemText
-                    sx={{ display: "inline" }}
-                    primary={
-                      <Typography variant="body1" color="initial">
-                        username
-                      </Typography>
-                    }
-                    secondary={
-                      <>
-                        <Typography
-                          sx={{
-                            overflowWrap: "break-word", // Set the overflowWrap property
-                            wordBreak: "break-word", // Add wordBreak property for better support
-                          }}
-                          variant="body2"
-                          color="initial"
-                        >
-                          subject
-                        </Typography>
-                      </>
-                    }
-                  />
-                </ListItem>
-                <Divider />
-                <ListItem disableGutters>
-                  <ListItemAvatar>
-                    <Avatar
-                      alt="user"
-                      src=""
-                      sx={{
-                        width: 35,
-                        height: 35,
-                      }}
-                    />
-                  </ListItemAvatar>
-                  <ListItemText
-                    sx={{ display: "inline" }}
-                    primary={
-                      <Typography variant="body1" color="initial">
-                        username
-                      </Typography>
-                    }
-                    secondary={
-                      <>
-                        <Typography
-                          sx={{
-                            overflowWrap: "break-word", // Set the overflowWrap property
-                            wordBreak: "break-word", // Add wordBreak property for better support
-                          }}
-                          variant="body2"
-                          color="initial"
-                        >
-                          subject
-                        </Typography>
-                      </>
-                    }
-                  />
-                </ListItem>
-                <Divider />
-                <ListItem disableGutters>
-                  <ListItemAvatar>
-                    <Avatar
-                      alt="user"
-                      src=""
-                      sx={{
-                        width: 35,
-                        height: 35,
-                      }}
-                    />
-                  </ListItemAvatar>
-                  <ListItemText
-                    sx={{ display: "inline" }}
-                    primary={
-                      <Typography variant="body1" color="initial">
-                        username
-                      </Typography>
-                    }
-                    secondary={
-                      <>
-                        <Typography
-                          sx={{
-                            overflowWrap: "break-word", // Set the overflowWrap property
-                            wordBreak: "break-word", // Add wordBreak property for better support
-                          }}
-                          variant="body2"
-                          color="initial"
-                        >
-                          subject
-                        </Typography>
-                      </>
-                    }
-                  />
-                </ListItem>
-                <Divider />
-                <ListItem disableGutters>
-                  <ListItemAvatar>
-                    <Avatar
-                      alt="user"
-                      src=""
-                      sx={{
-                        width: 35,
-                        height: 35,
-                      }}
-                    />
-                  </ListItemAvatar>
-                  <ListItemText
-                    sx={{ display: "inline" }}
-                    primary={
-                      <Typography variant="body1" color="initial">
-                        username
-                      </Typography>
-                    }
-                    secondary={
-                      <>
-                        <Typography
-                          sx={{
-                            overflowWrap: "break-word", // Set the overflowWrap property
-                            wordBreak: "break-word", // Add wordBreak property for better support
-                          }}
-                          variant="body2"
-                          color="initial"
-                        >
-                          subject
-                        </Typography>
-                      </>
-                    }
-                  />
-                </ListItem>
-                <Divider />
-                <ListItem disableGutters>
-                  <ListItemAvatar>
-                    <Avatar
-                      alt="user"
-                      src=""
-                      sx={{
-                        width: 35,
-                        height: 35,
-                      }}
-                    />
-                  </ListItemAvatar>
-                  <ListItemText
-                    sx={{ display: "inline" }}
-                    primary={
-                      <Typography variant="body1" color="initial">
-                        username
-                      </Typography>
-                    }
-                    secondary={
-                      <>
-                        <Typography
-                          sx={{
-                            overflowWrap: "break-word", // Set the overflowWrap property
-                            wordBreak: "break-word", // Add wordBreak property for better support
-                          }}
-                          variant="body2"
-                          color="initial"
-                        >
-                          subject
-                        </Typography>
-                      </>
-                    }
-                  />
-                </ListItem>
-                <Divider />
-                <ListItem disableGutters>
-                  <ListItemAvatar>
-                    <Avatar
-                      alt="user"
-                      src=""
-                      sx={{
-                        width: 35,
-                        height: 35,
-                      }}
-                    />
-                  </ListItemAvatar>
-                  <ListItemText
-                    sx={{ display: "inline" }}
-                    primary={
-                      <Typography variant="body1" color="initial">
-                        username
-                      </Typography>
-                    }
-                    secondary={
-                      <>
-                        <Typography
-                          sx={{
-                            overflowWrap: "break-word", // Set the overflowWrap property
-                            wordBreak: "break-word", // Add wordBreak property for better support
-                          }}
-                          variant="body2"
-                          color="initial"
-                        >
-                          subject
-                        </Typography>
-                      </>
-                    }
-                  />
-                </ListItem>
-                <Divider />
+                    );
+                  })
+                ) : (
+                  <Typography variant="body2" sx={{ textAlign: "center",margin:15 }}>Be the first one comment...</Typography>
+                )}
               </List>
             </Grid>
             <Divider />
@@ -400,7 +211,9 @@ const CommentModal = () => {
                 sx={{ width: "80%" }}
                 inputProps={{ style: { height: "2em" } }}
               />
-              <Button variant="text" sx={{marginTop:1 ,marginLeft:2}}>post</Button>
+              <Button variant="text" sx={{ marginTop: 1, marginLeft: 2 }}>
+                post
+              </Button>
             </Grid>
           </Grid>
         </Grid>
