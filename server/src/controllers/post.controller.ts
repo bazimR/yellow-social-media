@@ -1,7 +1,7 @@
 import { Request, Response, response } from "express";
 import sharp from "sharp";
 import crypto from "crypto";
-import { PutObjectCommand, GetObjectCommand, FileHeaderInfo } from "@aws-sdk/client-s3";
+import { PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { s3 } from "../database/AWSBUCKET/awsbucket";
 import Post from "../database/models/post.module";
@@ -68,16 +68,16 @@ export async function newPost(req: Request, res: Response) {
 export async function homePosts(req: Request, res: Response) {
   try {
     const userId = req.params.userId;
-    const page = req.query.page?parseInt(req.query.page.toString()):1
+    const page = req.query.page ? parseInt(req.query.page.toString()) : 1;
     console.log(page);
     const friendList = await User.findOne({ _id: userId }).select("friends");
     friendList?.friends.push(userId);
-    const data = await Post.find({ userId: { $in: friendList?.friends } }).sort(
-      { Date: -1 }
-    ).skip(page-1);
+    const data = await Post.find({ userId: { $in: friendList?.friends } })
+      .sort({ Date: -1 })
+      .skip(page - 1);
     console.log(data);
     if (!data) {
-      res.status(404).send({ error: "no pages" ,data});
+      res.status(404).send({ error: "no pages", data });
     } else {
       const signingPromises = data.map(async (doc) => {
         const imageUrl = await getSignedUrl(
@@ -98,7 +98,7 @@ export async function homePosts(req: Request, res: Response) {
               Key: user.profile,
               Bucket: bucketName,
             }),
-            { expiresIn: 60 * 10 }
+            { expiresIn: 60 * 30 }
           );
           doc.set("profileUrl", profileImg, { strict: false });
         }
@@ -122,13 +122,13 @@ export async function likePost(req: Request, res: Response) {
       console.log(post?.likes.includes(userId));
       if (post?.likes.includes(userId)) {
         await Post.updateOne({ _id: postId }, { $pull: { likes: userId } });
-        res.status(201).send({ Message: "like removed" ,value:-1});
+        res.status(201).send({ Message: "like removed", value: -1 });
       } else {
         await Post.findOneAndUpdate(
           { _id: postId },
           { $addToSet: { likes: userId } }
         );
-        res.status(201).send({ Message: "like added" ,value:1});
+        res.status(201).send({ Message: "like added", value: 1 });
       }
     });
   } catch (error) {

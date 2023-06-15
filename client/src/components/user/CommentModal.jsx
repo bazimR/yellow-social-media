@@ -14,25 +14,23 @@ import {
   Button,
 } from "@mui/material";
 import { setModalComment } from "../../redux/commentModelSlice";
+import TimeAgo from "timeago-react";
+import { useConfirm } from "material-ui-confirm";
+
 // import { RiBookmarkFill } from "@react-icons/all-files/ri/RiBookmarkFill.esm"//when saved done
 
 import { useDispatch, useSelector } from "react-redux";
-import { useQuery } from "@tanstack/react-query";
-import { getComments } from "../../helper/helper";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { addComment, deleteComment, getComments } from "../../helper/helper";
+import { useState } from "react";
 
 const CommentModal = () => {
+  const confirm = useConfirm();
+  const [body, setBody] = useState("");
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.post?.value);
-  //  const userId = useSelector((state) => state.user.value._id); remember !!!!!!!!!!!!!!!!!!!!
-  var currentDate = new Date(); // Current date and time
-  var postDate = new Date(posts.Date); // Date and time of the post
+  const queryClient = useQueryClient();
 
-  // Calculate the time difference in milliseconds
-  var timeDiff = currentDate.getTime() - postDate.getTime();
-
-  // Convert the time difference to hours
-  var hoursDiff = Math.floor(timeDiff / (1000 * 60 * 60));
-  // handling comment
   const BoxStyle = {
     position: "absolute",
     top: "50%",
@@ -50,18 +48,56 @@ const CommentModal = () => {
     dispatch(setModalComment(false));
   };
   const modal = useSelector((state) => state.modal.value);
+  const userId = useSelector((state) => state.user.value._id);
+  const username = useSelector((state) => state.user.value.username);
   const postId = posts._id;
+
+  //
+
   // geting comments
-  const { status, data } = useQuery({
+  const commentQuery = useQuery({
     enabled: modal,
     queryKey: ["comments", postId],
     queryFn: () => {
-      return getComments(postId);
+      return getComments(postId, userId);
     },
+    refetchOnWindowFocus: true,
   });
-  if (status === "loading") {
+  if (commentQuery.isLoading) {
     return <h1>loading</h1>;
   }
+  // mutation
+  const handleCommentSubmit = () => {
+    const formData = {
+      userId,
+      postId,
+      username,
+      body,
+    };
+    addComment(formData).then(() => {
+      queryClient
+        .refetchQueries({ queryKey: ["comments", postId] })
+        .then(() => {
+          setBody("");
+        });
+    });
+  };
+  // handle delete
+  const handleDelete = (commentId) => {
+    confirm({
+      title: "Are you sure you want to delete comment?",
+      confirmationButtonProps: { autoFocus: true },
+    })
+      .then(() => {
+        deleteComment(commentId).then(() => {
+          queryClient.refetchQueries({ queryKey: ["comments", postId] });
+        });
+      })
+      .catch(() => {
+        console.log("canceled");
+      });
+  };
+
   return (
     <Modal
       sx={{ display: { xs: "none", lg: "flex" } }}
@@ -153,13 +189,13 @@ const CommentModal = () => {
                 {posts.username} : {posts.caption}
               </Typography>
               <Typography sx={{ fontSize: "12px" }} color="#737373">
-                {hoursDiff} hours ago
+                <TimeAgo live={false} datetime={posts.Date} />
               </Typography>
             </Grid>
             <Grid item>
               <Divider />
               <List sx={{ height: 360, overflow: "auto" }}>
-                {data.length === 0 ? (
+                {commentQuery.data.length === 0 ? (
                   <Typography
                     component={"span"}
                     variant="body2"
@@ -168,20 +204,20 @@ const CommentModal = () => {
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
-                      marginY:20
+                      marginY: 20,
                     }}
                   >
-                    Be the first one comment...
+                    Be the first one to comment....
                   </Typography>
                 ) : (
-                  data.map((doc) => {
+                  commentQuery.data.map((doc) => {
                     return (
                       <div key={doc._id}>
                         <ListItem disableGutters>
                           <ListItemAvatar>
                             <Avatar
                               alt="user"
-                              src=""
+                              src={doc.profileUrl}
                               sx={{
                                 width: 35,
                                 height: 35,
@@ -195,8 +231,12 @@ const CommentModal = () => {
                                 component={"span"}
                                 variant="body1"
                                 color="initial"
+                                sx={{
+                                  fontSize: "12px",
+                                  fontWeight: "600",
+                                }}
                               >
-                                username
+                                {doc.username}
                               </Typography>
                             }
                             secondary={
@@ -206,15 +246,27 @@ const CommentModal = () => {
                                   sx={{
                                     overflowWrap: "break-word", // Set the overflowWrap property
                                     wordBreak: "break-word", // Add wordBreak property for better support
-                                    fontSize: "12px",
+                                    fontSize: "16px",
                                   }}
                                   color="initial"
                                 >
-                                  subject
+                                  {doc.body}
                                 </Typography>
                               </>
                             }
                           />
+                          {doc.userId === userId && (
+                            <Button
+                              color="error"
+                              onClick={() => {
+                                handleDelete(doc._id);
+                              }}
+                            >
+                              <Typography variant="body2" color="initial">
+                                delete
+                              </Typography>
+                            </Button>
+                          )}
                         </ListItem>
                         <Divider />
                       </div>
@@ -226,12 +278,23 @@ const CommentModal = () => {
             <Divider />
             <Grid item>
               <TextField
+                value={body}
+                id="Commentbody"
+                name="Commentbody"
+                onChange={(e) => {
+                  setBody(e.target.value);
+                }}
                 placeholder="comment...."
                 variant="standard"
                 sx={{ width: "80%" }}
                 inputProps={{ style: { height: "2em" } }}
               />
-              <Button variant="text" sx={{ marginTop: 1, marginLeft: 2 }}>
+              <Button
+                disabled={body === ""}
+                onClick={handleCommentSubmit}
+                variant="text"
+                sx={{ marginTop: 1, marginLeft: 2 }}
+              >
                 post
               </Button>
             </Grid>

@@ -8,9 +8,10 @@ import PropTypes from "prop-types";
 import { newPost } from "../../helper/helper";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation ,useQueryClient} from "@tanstack/react-query";
 import loading from "react-useanimations/lib/loading";
 const PostModal = ({ modal, setModal }) => {
+  const queryClient = useQueryClient()
   const [caption, setCaption] = useState("");
   const [file, setFile] = useState(null);
   const user = useSelector((state) => state.user.value);
@@ -28,6 +29,7 @@ const PostModal = ({ modal, setModal }) => {
       setSelectedImg(null);
       setCaption("");
       setModal(!modal);
+      queryClient.refetchQueries({queryKey:['posts']})
     },
   });
   // handling submit
@@ -129,11 +131,6 @@ const PostModal = ({ modal, setModal }) => {
                 alt="image"
               />
             </label>
-            {/* {file && (
-                  <button onClick={clearFile} style={{ marginLeft: "1rem" }}>
-                    Clear
-                  </button>
-                )} */}
             <input
               onChange={onUpload}
               type="file"

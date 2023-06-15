@@ -80,7 +80,7 @@ export async function likePost({ postId, userId }) {
     }
 }
 
-export async function getComments(postId) {
+export async function getComments(postId, userId) {
     const token = localStorage.getItem('token');
     try {
         const { data } = await axios.get(`/user/comments/${postId}`, {
@@ -88,10 +88,53 @@ export async function getComments(postId) {
                 "Content-Type": "application/json",
                 "authorization": `Bearer ${token}`,
             }
+            ,
+            params: {
+                userId
+            }
         },)
         return data
     } catch (error) {
         console.error(error);
         return Promise.reject({ error, msg: "getting comments failed" });
+    }
+}
+
+
+export async function addComment(formData) {
+    const token = localStorage.getItem('token')
+    try {
+        return await axios.post('/user/newcomment', formData, {
+            headers: {
+                "Content-Type": 'application/json',
+                "authorization": `Bearer ${token}`
+            }
+        })
+
+    } catch (error) {
+        console.error(error);
+        return Promise.reject({ error, msg: "sending comments failed" });
+    }
+}
+
+
+export async function deleteComment(commentId) {
+    const token = localStorage.getItem('token');
+    try {
+        const { data } = await axios.put(
+            '/user/deletecomment',
+            { commentId }, // Place the commentId directly in the request body
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    "authorization": `Bearer ${token}`
+                }
+            }
+        );
+        // Handle the response data if necessary
+        console.log(data);
+    } catch (error) {
+        console.error(error);
+        return Promise.reject({ error, msg: "delete comment failed" });
     }
 }

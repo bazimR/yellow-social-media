@@ -25,7 +25,7 @@ router.route("/user/comments/:postId").get(getComments); //getting comments
 
 // Put Route
 router.route("/post/like/:postId").put(authToken, likePost); //post like/unlike
-router.route("/user/deletecomment/:commentId").all(authToken, deteleComments); //delete comment
+router.route("/user/deletecomment").put(authToken, deteleComments); //delete comment
 // router test
 router.route("/test").all();
 export default router;

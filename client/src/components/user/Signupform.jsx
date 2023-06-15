@@ -35,7 +35,6 @@ const Signupform = () => {
         <TextField
           {...formik.getFieldProps("email")}
           style={{
-            backgroundColor: "white",
             borderTopLeftRadius: "6px",
             borderTopRightRadius: "6px",
           }}
@@ -49,7 +48,6 @@ const Signupform = () => {
         <TextField
           {...formik.getFieldProps("username")}
           style={{
-            backgroundColor: "white",
             borderTopLeftRadius: "6px",
             borderTopRightRadius: "6px",
           }}
@@ -63,7 +61,6 @@ const Signupform = () => {
         <TextField
           {...formik.getFieldProps("password")}
           style={{
-            backgroundColor: "white",
             borderTopLeftRadius: "6px",
             borderTopRightRadius: "6px",
           }}
@@ -77,7 +74,6 @@ const Signupform = () => {
         <TextField
           {...formik.getFieldProps("confirm")}
           style={{
-            backgroundColor: "white",
             borderTopLeftRadius: "6px",
             borderTopRightRadius: "6px",
           }}

@@ -8,14 +8,14 @@ import CommentModal from "./CommentModal";
 const Post = () => {
   const userId = useSelector((state) => state.user.value._id);
   const modal = useSelector((state) => state.modal.value);
-  const { data, isLoading } = useInfiniteQuery({
+  const postQuery = useInfiniteQuery({
     queryKey: ["posts"],
     getNextPageParam: (prevData) => prevData.nextPage,
     queryFn: ({ pageParams = 1 }) => homePost(userId, pageParams),
     refetchOnWindowFocus: false,
   });
 
-  if (isLoading) return <h1>loading</h1>;
+  if (postQuery.isLoading) return <h1>loading</h1>;
 
   return (
     <Grid
@@ -25,11 +25,12 @@ const Post = () => {
         height: "75vh",
         overflow: "auto",
         paddingTop: 1,
+        padding:3
       }}
     >
-      {modal && <CommentModal />}
+      {modal && <CommentModal/>}
 
-      {data.pages.map((page) =>
+      {postQuery.data.pages.map((page) =>
         page.map((posts) => {
           return <PostLg posts={posts} key={posts._id} />;
         })

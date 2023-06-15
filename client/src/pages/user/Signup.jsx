@@ -5,15 +5,13 @@ import Signupform from "../../components/user/Signupform";
 import Logo from "../../components/user/Logo";
 const Signup = () => {
   return (
-    <>
+    <div style={{height:"100vh"}}>
       <Grid
         container
-        marginBottom={2}
-        marginTop={2}
         direction="column"
         justifyContent="center"
         alignItems="center"
-        spacing={2}
+
       >
         <Toaster position="top-center"></Toaster>
         <Grid item xs={12}>
@@ -40,7 +38,7 @@ const Signup = () => {
           <Link to={"/"}>
             <Typography
               sx={{ fontSize: "1em" }}
-              color="Highlight"
+              color="ActiveCaption"
               p={3}
               align="right"
             >
@@ -49,12 +47,12 @@ const Signup = () => {
           </Link>
         </Grid>
       </Grid>
-      <footer style={{ textAlign: "center", marginBottom: "4em" }}>
-        <Typography variant="body2" color="#747474">
+      <footer style={{ textAlign: "center", }}>
+        <Typography variant="body2" color="ActiveCaption">
           © 2023 Yellow. All rights reserved
         </Typography>
       </footer>
-    </>
+    </div>
   );
 };
 

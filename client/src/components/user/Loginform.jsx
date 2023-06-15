@@ -38,11 +38,10 @@ const Loginform = () => {
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <Grid item mb={2} xs={12}>
+      <Grid item marginY={4} xs={12}>
         <TextField
           {...formik.getFieldProps("email")}
           style={{
-            backgroundColor: "white",
             borderTopLeftRadius: "6px",
             borderTopRightRadius: "6px",
           }}
@@ -52,10 +51,9 @@ const Loginform = () => {
           fullWidth
         />
       </Grid>
-      <Grid item xs={12} mb={2}>
+      <Grid item xs={12} marginY={4}>
         <TextField
           style={{
-            backgroundColor: "white",
             borderTopLeftRadius: "6px",
             borderTopRightRadius: "6px",
           }}
@@ -67,7 +65,7 @@ const Loginform = () => {
           fullWidth
         />
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={12} marginY={4}>
         <Button
           variant="contained"
           sx={{ bgcolor: "primary.main", fontSize: 20, fontWeight: "600" }}

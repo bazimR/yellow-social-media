@@ -4,12 +4,18 @@ import {
   CardContent,
   Avatar,
   Grid,
-  Typography,
+  IconButton,
 } from "@mui/material";
-import { useSelector } from "react-redux";
 import { TiPlus } from "@react-icons/all-files/ti/TiPlus.esm";
 const Story = () => {
-  const {value} = useSelector(state=>state.user)
+  const style = {
+    background: " rgba( 255, 255, 255, 0.1 )",
+    boxShadow: "0 8px 10px 0 rgba(31, 38, 135, 0.37)",
+    backdropFilter: "blur(4px)",
+    WebkitBackdropFilter: "blur(4px)",
+    borderRadius: "10px",
+    border: "1px solid rgba(255, 255, 255, 0.18)",
+  };
   const story = [
     "robin",
     "rishal",
@@ -30,7 +36,6 @@ const Story = () => {
     <Grid
       p={1}
       sx={{
-        backgroundColor: "",
         width: "100%",
         height: { xs: "25", md: "20vh", lg: "25vh" },
         display: "flex",
@@ -45,42 +50,18 @@ const Story = () => {
       }}
     >
       <Grid item sx={{ mr: 1 }}>
-        <Card elevation={0}>
+        <Card style={style} elevation={10}>
           <CardActionArea
             sx={{
               minWidth: 110,
               minHeight: 170,
-              backgroundColor: "#D9D9D9",
+              backgroundColor: "#fffff",
             }}
           >
-            <CardContent sx={{ position: "relative" }}>
-              <Avatar
-                sx={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  width: 35,
-                  height: 35,
-                  marginTop: -5,
-                  marginLeft: 1,
-                  border: 1,
-                  borderColor: "white",
-                }}
-                alt="Remy Sharp"
-                src={value.profile?value.profile:""}
-                variant="rounded"
-              />
-              <Typography
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: "#747474",
-                  fontSize: "3em",
-                }}
-              >
+            <CardContent sx={{ position: "relative" ,display:'flex',justifyContent:'center',alignItems:'center'}}>
+              <IconButton aria-label="addstory" sx={{fontSize:'3em',color:'primary.main'}}>
                 <TiPlus />
-              </Typography>
+              </IconButton>
             </CardContent>
           </CardActionArea>
         </Card>
@@ -88,14 +69,14 @@ const Story = () => {
       {story.map((name) => {
         return (
           <Grid sx={{ mr: 1 }} item key={name}>
-            <Card elevation={0}>
+            <Card style={style} elevation={10}>
               <CardActionArea
                 sx={{
                   minWidth: 110,
                   minHeight: 170,
                   maxHeight: 240,
                   maxWidth: 140,
-                  backgroundColor: "#D9D9D9",
+                  backgroundColor: "#fffff",
                 }}
               >
                 <CardContent sx={{ position: "relative" }}>

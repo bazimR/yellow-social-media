@@ -6,21 +6,19 @@ import Logo from "../../components/user/Logo";
 import { FcGoogle } from "@react-icons/all-files/fc/FcGoogle.esm";
 const Login = () => {
   return (
-    <>
+    <div style={{height:"100vh",padding:0}}>
+      <Toaster position="top-center"></Toaster>
       <Grid
         container
-        marginBottom={2}
-        marginTop={2}
         direction="column"
         justifyContent="center"
         alignItems="center"
-        spacing={2}
       >
-        <Toaster position="top-center"></Toaster>
-        <Grid item xs={12}>
+        <Grid item xs={12} >
           <Logo />
         </Grid>
         <Grid
+          
           item
           xs={12}
           sm={6}
@@ -56,6 +54,7 @@ const Login = () => {
           <Divider orientation="horizontal"><Typography variant="body1" color="primary.dark">OR</Typography></Divider>
         </Grid>
         <Grid
+          marginY={4}
           item
           xs={12}
           sm={6}
@@ -79,28 +78,28 @@ const Login = () => {
           >
             <Typography
               sx={{ fontSize: "1em", fontWeight: 600 }}
-              color="Highlight"
+              color="ActiveCaption"
             >
               Sign in with Google account?
             </Typography>
           </Button>
         </Grid>
         <Grid item xs={12} sm={6} md={4} lg={3} sx={{ textAlign: "center" }}>
-          <Typography variant="body1" color="Highlight" p={1}>
+          <Typography variant="body1" color="InfoText" p={1}>
             New to yellow?,{" "}
-            <Link to={"/signup"} style={{ color: "Highlight" }}>
+            <Link to={"/signup"} style={{ color: "HighlightText" }}>
               {" "}
               Sign up
             </Link>
           </Typography>
-        </Grid>
-      </Grid>
-      <footer style={{ textAlign: "center" }}>
-        <Typography variant="body2" color="#747474">
+      <footer style={{ textAlign: "center",}}>
+        <Typography variant="body2" color="ActiveCaption">
           © 2023 Yellow. All rights reserved
         </Typography>
       </footer>
-    </>
+      </Grid>
+        </Grid>
+    </div>
   );
 };
 

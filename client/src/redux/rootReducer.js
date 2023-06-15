@@ -8,8 +8,8 @@ import commentModelSlice from './commentModelSlice';
 
 const rootReducer = combineReducers({
   user: userReducer,
-  post:postSlice,
-  modal:commentModelSlice
+  post: postSlice,
+  modal: commentModelSlice,
   // Other individual reducers
 });
 

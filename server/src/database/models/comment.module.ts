@@ -18,8 +18,12 @@ const commentSchema = new Schema({
   },
   isBlocked: {
     type: Boolean,
-    default:false,
-  }
+    default: false,
+  },
+  username: {
+    type: String,
+    required: true,
+  },
 });
 
 const Comment = model("comment", commentSchema, "comments");
