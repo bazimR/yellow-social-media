@@ -8,6 +8,7 @@ import {
   deteleComments,
   getComments,
 } from "../controllers/comment.controller";
+import { homeStory, newStory } from "../controllers/story.controller";
 const router = Router();
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -18,10 +19,13 @@ router.route("/login").post(controller.userLogin); //user login
 router.route("/admin-login").post(controller.adminLogin); //admin login
 router.route("/user/newpost").post(authToken, upload.single("image"), newPost); //user new post
 router.route("/user/newcomment").post(authToken, addComment); //new comments
+router.route("/user/newstory").post(authToken, upload.single("image"), newStory); //new story
+
 // Get Route
 router.route("/admin/users").get(controller.getAllUsers); //getting all users
 router.route("/home/homeposts/:userId").get(homePosts); // user's home posts
 router.route("/user/comments/:postId").get(getComments); //getting comments
+router.route("/home/homestory/:userId").get(homeStory); // user's home posts
 
 // Put Route
 router.route("/post/like/:postId").put(authToken, likePost); //post like/unlike

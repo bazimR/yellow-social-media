@@ -11,7 +11,7 @@ const bucketName = process.env.BUCKET as string;
 export async function addComment(req: Request, res: Response) {
   try {
     const { userId, postId, body, username } = req.body;
-    console.log(req.body);
+
     const comment = new Comment({
       userId,
       username,
@@ -26,7 +26,6 @@ export async function addComment(req: Request, res: Response) {
       })
       .catch((error) => {
         console.error(error);
-        console.log({ userId, postId, body, username });
         res.status(500).send({ error, err: "comment failed" });
       });
   } catch (error) {

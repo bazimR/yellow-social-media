@@ -1,15 +1,65 @@
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import { Box, Modal, TextField } from "@mui/material";
+import { Box, Modal } from "@mui/material";
 import UseAnimations from "react-useanimations";
 import LoadingButton from "@mui/lab/LoadingButton";
 import imageVector from "../../assets/post6.png";
-import PropTypes from "prop-types";
 import loading from "react-useanimations/lib/loading";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setModalStory } from "../../redux/storyModalSlice";
+import { addStory } from "../../helper/helper";
 
 const AddStory = () => {
+  const storyModal = useSelector((state) => state.story.value);
+  const userId = useSelector((state) => state.user.value._id);
+  const dispatch = useDispatch();
+  const queryClient = useQueryClient();
+  const [file, setFile] = useState(null);
+  const [selectedImg, setSelectedImg] = useState(null);
+  const BoxStyle = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: {
+      lg: "30%",
+    },
+    height: "auto",
+    bgcolor: "background.paper",
+    borderRadius: "15px",
+    boxShadow: 24,
+    p: 0,
+  };
+  const formData = new FormData();
+  const onUpload = (e) => {
+    const uploadedFile = e.target.files[0];
+    setSelectedImg(URL.createObjectURL(uploadedFile));
+    setFile(uploadedFile);
+  };
+  //
+  const createPostMn = useMutation({
+    mutationFn: addStory,
+    onSuccess: () => {
+      setFile(null);
+      setSelectedImg(null);
+      dispatch(setModalStory(false));
+      queryClient.refetchQueries({ queryKey: ["story"] });
+    },
+  });
+  //
+  const handleSubmit = (e) => {
+    formData.append("image", file);
+    formData.append("userId", userId);
+    e.preventDefault();
+    createPostMn.mutate(formData);
+  };
+  const handleClose = () => {
+    dispatch(setModalStory(false));
+  };
   return (
-    <Modal disableAutoFocus={true} open={modal} onClose={handleClose}>
+    <Modal disableAutoFocus={true} open={storyModal} onClose={handleClose}>
       <Box sx={BoxStyle}>
         <Grid
           container
@@ -23,33 +73,31 @@ const AddStory = () => {
         >
           <Grid item sx={{ width: "100%" }}>
             <Typography
+              color={"primary.main"}
               sx={{
                 fontSize: "1.5em",
                 fontWeight: 400,
-                color: "#004242",
                 padding: 1,
                 display: "flex",
                 justifyContent: "center", // Center the text horizontally
                 alignItems: "center",
               }}
             >
-              create
+              story
             </Typography>
-          </Grid>
-
-          <Grid item>
-            <TextField
-              onChange={(e) => {
-                setCaption(e.target.value);
+            <Typography
+              sx={{
+                paddingY: 2,
+                fontSize: "0.9em",
+                fontWeight: 200,
+                display: "flex",
+                justifyContent: "center", // Center the text horizontally
+                alignItems: "center",
               }}
-              id="caption"
-              name="caption"
-              size="small"
-              variant="standard"
-              sx={{ width: { lg: "20em", xs: "20em" }, padding: { xs: 1 } }}
-              type="text"
-              placeholder="caption..."
-            />
+              color="primary.dark"
+            >
+              story only seen for a day
+            </Typography>
           </Grid>
           <Grid
             item
@@ -66,7 +114,7 @@ const AddStory = () => {
             <label htmlFor="post">
               <img
                 style={{
-                  width: `${file ? "20em" : "8em"}`,
+                  width: `${file ? "15em" : "8em"}`,
                   height: `${file ? "20em" : "8em"}`,
                   cursor: "pointer",
                 }}

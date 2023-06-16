@@ -8,7 +8,7 @@ import {
   ListItemText,
   Divider,
   Collapse,
-  Paper
+  Paper,
 } from "@mui/material";
 import { useConfirm } from "material-ui-confirm";
 import { TiHome } from "@react-icons/all-files/ti/TiHome.esm";
@@ -25,18 +25,19 @@ import { useDispatch } from "react-redux";
 import { setUser } from "../../redux/userSlice";
 import { setPostRedux } from "../../redux/postSlice";
 import { setModalComment } from "../../redux/commentModelSlice";
+import AddStory from "../../components/user/AddStory";
+import { setModalStory } from "../../redux/storyModalSlice";
 
 const Layoutuser = () => {
   const style = {
-    background: 'rgba(255, 255, 255, 0.1)',
-    boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
-    backdropFilter: 'blur(1.5px)',
-    WebkitBackdropFilter: 'blur(1.5px)',
-    border: '1px solid rgba(255, 255, 255, 0.18)',
-  }
+    background: "rgba(255, 255, 255, 0.1)",
+    boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)",
+    backdropFilter: "blur(1.5px)",
+    WebkitBackdropFilter: "blur(1.5px)",
+    border: "1px solid rgba(255, 255, 255, 0.18)",
+  };
   const confirm = useConfirm();
   const [modal, setModal] = useState(false);
-  const [storyModal, setStoryModal] = useState(false)
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState();
   const navigate = useNavigate();
@@ -62,6 +63,7 @@ const Layoutuser = () => {
         dispatch(setUser(""));
         dispatch(setPostRedux(""));
         dispatch(setModalComment(false));
+        dispatch(setModalStory(false));
         navigate("/");
       })
       .catch(() => {
@@ -71,6 +73,7 @@ const Layoutuser = () => {
 
   return (
     <main>
+      <AddStory />
       <PostModal modal={modal} setModal={setModal} />
 
       {/* large devices */}
@@ -134,158 +137,181 @@ const Layoutuser = () => {
             </Typography>
           </Grid>
           <Grid m={2} item>
-            <Paper elevation={10} style={style} sx={{
-                  width: "100%",
-                  bgcolor: "secondary.light",
-                  borderRadius: "1em",
-                }}>
-                <List sx={{ width: "100%" }}>
-                  <ListItemButton
-                    selected={selected === 0}
-                    onClick={() => handleClick(0, "/home")}
+            <Paper
+              elevation={10}
+              style={style}
+              sx={{
+                width: "100%",
+                bgcolor: "secondary.light",
+                borderRadius: "1em",
+              }}
+            >
+              <List sx={{ width: "100%" }}>
+                <ListItemButton
+                  selected={selected === 0}
+                  onClick={() => handleClick(0, "/home")}
+                >
+                  <ListItemIcon
+                    sx={{
+                      fontSize: "2em",
+                      color: `${
+                        selected === 0 ? "primary.dark" : "primary.main"
+                      }`,
+                      ml: 0,
+                      mb: 0,
+                    }}
                   >
-                    <ListItemIcon
-                      sx={{
-                        fontSize: "2em",
-                        color: `${selected === 0 ? "primary.dark" : "primary.main"}`,
-                        ml: 0,
-                        mb: 0,
-                      }}
-                    >
-                      <TiHome />
-                    </ListItemIcon>
-                    <ListItemText
-                      sx={{
-                        color: `${selected === 0 ? "primary.dark" : "primary.main"}`,
-                        ml: 0,
-                        mb: 0,
-                      }}
-                      primary="Home"
-                    />
-                  </ListItemButton>
-                  <Divider />
-                  <ListItemButton
-                    selected={selected === 1}
-                    onClick={() => handleClick(1, "/home/messages")}
+                    <TiHome />
+                  </ListItemIcon>
+                  <ListItemText
+                    sx={{
+                      color: `${
+                        selected === 0 ? "primary.dark" : "primary.main"
+                      }`,
+                      ml: 0,
+                      mb: 0,
+                    }}
+                    primary="Home"
+                  />
+                </ListItemButton>
+                <Divider />
+                <ListItemButton
+                  selected={selected === 1}
+                  onClick={() => handleClick(1, "/home/messages")}
+                >
+                  <ListItemIcon
+                    sx={{
+                      fontSize: "2em",
+                      color: `${
+                        selected === 1 ? "primary.dark" : "primary.main"
+                      }`,
+                      ml: 0,
+                      mb: 0,
+                    }}
                   >
-                    <ListItemIcon
-                      sx={{
-                        fontSize: "2em",
-                        color: `${selected === 1 ? "primary.dark" : "primary.main"}`,
-                        ml: 0,
-                        mb: 0,
-                      }}
-                    >
-                      <TiMessages />
-                    </ListItemIcon>
-                    <ListItemText
-                      sx={{
-                        color: `${selected === 1 ? "primary.dark" : "primary.main"}`,
-                        ml: 0,
-                        mb: 0,
-                      }}
-                      primary="Messages"
-                    />
-                  </ListItemButton>
-                  <Divider />
-                  <ListItemButton
-                    selected={selected === 2}
-                    onClick={() => handleClick(2)}
+                    <TiMessages />
+                  </ListItemIcon>
+                  <ListItemText
+                    sx={{
+                      color: `${
+                        selected === 1 ? "primary.dark" : "primary.main"
+                      }`,
+                      ml: 0,
+                      mb: 0,
+                    }}
+                    primary="Messages"
+                  />
+                </ListItemButton>
+                <Divider />
+                <ListItemButton
+                  selected={selected === 2}
+                  onClick={() => handleClick(2)}
+                >
+                  <ListItemIcon
+                    sx={{
+                      fontSize: "2em",
+                      color: `${
+                        selected === 2 ? "primary.dark" : "primary.main"
+                      }`,
+                      ml: 0,
+                      mb: 0,
+                    }}
                   >
-                    <ListItemIcon
-                      sx={{
-                        fontSize: "2em",
-                        color: `${selected === 2 ? "primary.dark" : "primary.main"}`,
-                        ml: 0,
-                        mb: 0,
-                      }}
-                    >
-                      <TiPlus />
-                    </ListItemIcon>
-                    <ListItemText
-                      sx={{
-                        color: `${selected === 2 ? "primary.dark" : "primary.main"}`,
-                        ml: 0,
-                        mb: 0,
-                      }}
-                      primary="Create"
-                    />
-                  </ListItemButton>
-                  <Divider />
-                  <ListItemButton
-                    selected={selected === 3}
-                    onClick={() => handleClick(3, "/home/saved")}
+                    <TiPlus />
+                  </ListItemIcon>
+                  <ListItemText
+                    sx={{
+                      color: `${
+                        selected === 2 ? "primary.dark" : "primary.main"
+                      }`,
+                      ml: 0,
+                      mb: 0,
+                    }}
+                    primary="Create"
+                  />
+                </ListItemButton>
+                <Divider />
+                <ListItemButton
+                  selected={selected === 3}
+                  onClick={() => handleClick(3, "/home/saved")}
+                >
+                  <ListItemIcon
+                    sx={{
+                      fontSize: "2em",
+                      color: `${
+                        selected === 3 ? "primary.dark" : "primary.main"
+                      }`,
+                      ml: 0,
+                      mb: 0,
+                    }}
                   >
-                    <ListItemIcon
-                      sx={{
-                        fontSize: "2em",
-                        color: `${selected === 3 ? "primary.dark" : "primary.main"}`,
-                        ml: 0,
-                        mb: 0,
-                      }}
-                    >
-                      <TiBookmark />
-                    </ListItemIcon>
-                    <ListItemText
-                      sx={{
-                        color: `${selected === 3 ? "primary.dark" : "primary.main"}`,
-                        ml: 0,
-                        mb: 0,
-                      }}
-                      primary="Saved"
-                    />
-                  </ListItemButton>
-                  <Divider />
-                  <ListItemButton
-                    selected={selected === 4}
-                    onClick={() => handleClick(4)}
+                    <TiBookmark />
+                  </ListItemIcon>
+                  <ListItemText
+                    sx={{
+                      color: `${
+                        selected === 3 ? "primary.dark" : "primary.main"
+                      }`,
+                      ml: 0,
+                      mb: 0,
+                    }}
+                    primary="Saved"
+                  />
+                </ListItemButton>
+                <Divider />
+                <ListItemButton
+                  selected={selected === 4}
+                  onClick={() => handleClick(4)}
+                >
+                  <ListItemIcon
+                    sx={{
+                      fontSize: "2em",
+                      color: `${
+                        selected === 4 ? "primary.dark" : "primary.main"
+                      }`,
+                      ml: 0,
+                      mb: 0,
+                    }}
                   >
-                    <ListItemIcon
-                      sx={{
-                        fontSize: "2em",
-                        color: `${selected === 4 ? "primary.dark" : "primary.main"}`,
-                        ml: 0,
-                        mb: 0,
+                    <TiCog />
+                  </ListItemIcon>
+                  <ListItemText
+                    sx={{
+                      color: `${
+                        selected === 4 ? "primary.dark" : "primary.main"
+                      }`,
+                      ml: 0,
+                      mb: 0,
+                    }}
+                    primary="Settings"
+                  />
+                </ListItemButton>
+                <Collapse in={open} timeout="auto" unmountOnExit>
+                  <List component="div" disablePadding>
+                    <ListItemButton
+                      onClick={() => {
+                        handleSignout();
                       }}
+                      sx={{ pl: 4 }}
                     >
-                      <TiCog />
-                    </ListItemIcon>
-                    <ListItemText
-                      sx={{
-                        color: `${selected === 4 ? "primary.dark" : "primary.main"}`,
-                        ml: 0,
-                        mb: 0,
-                      }}
-                      primary="Settings"
-                    />
-                  </ListItemButton>
-                  <Collapse in={open} timeout="auto" unmountOnExit>
-                    <List component="div" disablePadding>
-                      <ListItemButton
-                        onClick={() => {
-                          handleSignout();
+                      <ListItemIcon
+                        sx={{
+                          fontSize: "2em",
+                          color: "primary.main",
                         }}
-                        sx={{ pl: 4 }}
                       >
-                        <ListItemIcon
-                          sx={{
-                            fontSize: "2em",
-                            color: "primary.main",
-                          }}
-                        >
-                          <TiPower />
-                        </ListItemIcon>
-                        <ListItemText
-                          primary="Signout"
-                          sx={{
-                            color: "primary.main",
-                          }}
-                        />
-                      </ListItemButton>
-                    </List>
-                  </Collapse>
-                </List>
-              
+                        <TiPower />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary="Signout"
+                        sx={{
+                          color: "primary.main",
+                        }}
+                      />
+                    </ListItemButton>
+                  </List>
+                </Collapse>
+              </List>
             </Paper>
           </Grid>
           <Grid
@@ -294,9 +320,7 @@ const Layoutuser = () => {
             display={"flex"}
             justifyContent="left"
             alignItems="flex-start"
-          >
-           
-          </Grid>
+          ></Grid>
         </Grid>
         <Grid item xs={20} justifyContent={"center"}>
           <Outlet />

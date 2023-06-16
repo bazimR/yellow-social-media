@@ -10,6 +10,10 @@ const storySchema = new Schema({
     required: true,
   },
   Date: Date,
+  expired: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const Story = model("story", storySchema, "stories");

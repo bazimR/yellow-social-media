@@ -69,13 +69,11 @@ export async function homePosts(req: Request, res: Response) {
   try {
     const userId = req.params.userId;
     const page = req.query.page ? parseInt(req.query.page.toString()) : 1;
-    console.log(page);
     const friendList = await User.findOne({ _id: userId }).select("friends");
     friendList?.friends.push(userId);
     const data = await Post.find({ userId: { $in: friendList?.friends } })
       .sort({ Date: -1 })
       .skip(page - 1);
-    console.log(data);
     if (!data) {
       res.status(404).send({ error: "no pages", data });
     } else {
@@ -117,9 +115,8 @@ export async function likePost(req: Request, res: Response) {
   try {
     const postId = req.params.postId;
     const { userId } = req.body;
-    console.log("object");
+
     await Post.findOne({ _id: postId }).then(async (post) => {
-      console.log(post?.likes.includes(userId));
       if (post?.likes.includes(userId)) {
         await Post.updateOne({ _id: postId }, { $pull: { likes: userId } });
         res.status(201).send({ Message: "like removed", value: -1 });

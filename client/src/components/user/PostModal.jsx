@@ -79,14 +79,14 @@ const PostModal = ({ modal, setModal }) => {
               sx={{
                 fontSize: "1.5em",
                 fontWeight: 400,
-                color: "#004242",
+                color: "primary.main",
                 padding: 1,
                 display: "flex",
                 justifyContent: "center", // Center the text horizontally
                 alignItems: "center",
               }}
             >
-              create
+              post
             </Typography>
           </Grid>
 

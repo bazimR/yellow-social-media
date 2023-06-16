@@ -121,7 +121,7 @@ export async function addComment(formData) {
 export async function deleteComment(commentId) {
     const token = localStorage.getItem('token');
     try {
-        const { data } = await axios.put(
+        return await axios.put(
             '/user/deletecomment',
             { commentId }, // Place the commentId directly in the request body
             {
@@ -132,9 +132,35 @@ export async function deleteComment(commentId) {
             }
         );
         // Handle the response data if necessary
-        console.log(data);
     } catch (error) {
         console.error(error);
         return Promise.reject({ error, msg: "delete comment failed" });
+    }
+}
+
+
+export async function addStory(formData) {
+
+    const token = localStorage.getItem('token');
+    try {
+        await axios.post('/user/newstory', formData, {
+            headers: {
+                "Content-Type": 'multipart/form-data',
+                "authorization": `Bearer ${token}`
+            }
+        })
+    } catch (error) {
+        console.error(error);
+        return Promise.reject({ error, msg: "creating story failed" });
+    }
+}
+
+export async function homeStory(userId) {
+    try {
+        const {data} = await axios.get(`/home/homestory/${userId}`)
+        return data
+    } catch (error) {
+        console.error(error);
+        return Promise.reject({ error, msg: "story retriving failed" });
     }
 }
