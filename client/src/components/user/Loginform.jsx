@@ -68,7 +68,7 @@ const Loginform = () => {
       <Grid item xs={12} marginY={4}>
         <Button
           variant="contained"
-          sx={{ bgcolor: "primary.main", fontSize: 20, fontWeight: "600" }}
+          sx={{ bgcolor: "primary.main", fontSize: 20, fontWeight: "600" ,color:'white'}}
           disableElevation
           size="large"
           fullWidth

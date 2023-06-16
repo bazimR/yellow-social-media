@@ -1,11 +1,4 @@
-import {
-  Card,
-  CardActionArea,
-  CardContent,
-  Avatar,
-  Grid,
-  IconButton,
-} from "@mui/material";
+import { Card, CardContent, Avatar, Grid, IconButton } from "@mui/material";
 import { TiPlus } from "@react-icons/all-files/ti/TiPlus.esm";
 const Story = () => {
   const style = {
@@ -16,22 +9,7 @@ const Story = () => {
     borderRadius: "10px",
     border: "1px solid rgba(255, 255, 255, 0.18)",
   };
-  const story = [
-    "robin",
-    "rishal",
-    "alen",
-    "jackson",
-    "szz",
-    "fe",
-    "fq",
-    "fs",
-    "szw2",
-    "sff",
-    "faq",
-    "qesd",
-    "caa",
-    "fag",
-  ];
+  const story = ["2"];
   return (
     <Grid
       p={1}
@@ -51,53 +29,55 @@ const Story = () => {
     >
       <Grid item sx={{ mr: 1 }}>
         <Card style={style} elevation={10}>
-          <CardActionArea
+          <CardContent
             sx={{
-              minWidth: 110,
-              minHeight: 170,
+              position: "relative",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "6em",
+              height: "9em",
               backgroundColor: "#fffff",
             }}
           >
-            <CardContent sx={{ position: "relative" ,display:'flex',justifyContent:'center',alignItems:'center'}}>
-              <IconButton aria-label="addstory" sx={{fontSize:'3em',color:'primary.main'}}>
-                <TiPlus />
-              </IconButton>
-            </CardContent>
-          </CardActionArea>
+            <IconButton
+              aria-label="addstory"
+              sx={{ fontSize: "3em", color: "primary.main" }}
+            >
+              <TiPlus />
+            </IconButton>
+          </CardContent>
         </Card>
       </Grid>
       {story.map((name) => {
         return (
           <Grid sx={{ mr: 1 }} item key={name}>
             <Card style={style} elevation={10}>
-              <CardActionArea
+              <CardContent
                 sx={{
-                  minWidth: 110,
-                  minHeight: 170,
-                  maxHeight: 240,
-                  maxWidth: 140,
+                  position: "relative",
+                  width: "6em",
+                  height: "9em",
                   backgroundColor: "#fffff",
                 }}
               >
-                <CardContent sx={{ position: "relative" }}>
-                  <Avatar
-                    sx={{
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
-                      width: 35,
-                      height: 35,
-                      marginTop: -7.5,
-                      marginLeft: 1,
-                      border: 1,
-                      borderColor: "white",
-                    }}
-                    alt={name}
-                    src=""
-                    variant="rounded"
-                  />
-                </CardContent>
-              </CardActionArea>
+                <Avatar
+                  sx={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: 35,
+                    height: 35,
+                    marginTop: -7.5,
+                    marginLeft: 1,
+                    border: 1,
+                    borderColor: "white",
+                  }}
+                  alt={name}
+                  src=""
+                  variant="rounded"
+                />
+              </CardContent>
             </Card>
           </Grid>
         );

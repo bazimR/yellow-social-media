@@ -1,20 +1,16 @@
 body {
     margin: 0;
     padding: 0;
-    background-image: url('../assets/background4.jpg');
-    background-size: cover;
+    /* background-image: url('../assets/background4.jpg');
+     */
+    /* background-size: cover; */
+    background-image: linear-gradient(to bottom right, #ffffff 0%, #ace0f9 100%);
 }
 
 ::-webkit-scrollbar {
     display: none;
 }
 
-@media (max-width: 1220px) {
-    body {
-        background-image: none; 
-        /* Remove the background image */
-    }
-}
 
 .img {
     width: 10px;

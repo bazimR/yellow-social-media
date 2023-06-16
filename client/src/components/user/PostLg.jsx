@@ -85,6 +85,7 @@ const PostLg = ({ posts }) => {
               alt="user"
               src=""
               sx={{
+                bgcolor: "primary.light",
                 width: 40,
                 height: 40,
                 marginY: 1,

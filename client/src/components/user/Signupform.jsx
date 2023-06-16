@@ -84,15 +84,15 @@ const Signupform = () => {
         />
       </Grid>
       <Grid item mb={2} xs={12}>
-        <Typography variant="body2" color="primary.dark" p={3}>
+        <Typography variant="body2" color="primary.dark" py={3}>
           By signing up, you agree to our Terms , Privacy Policy and Cookies
-          Policy
+          Policy.
         </Typography>
       </Grid>
       <Grid item xs={12}>
         <Button
           variant="contained"
-          sx={{ bgcolor: "primary.main", fontSize: 20, fontWeight: "600" }}
+          sx={{ bgcolor: "primary.main", fontSize: 20, fontWeight: "600" ,color:'white'}}
           disableElevation
           size="large"
           fullWidth

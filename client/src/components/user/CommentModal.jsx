@@ -6,26 +6,21 @@ import {
   Avatar,
   Typography,
   List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
   Divider,
   TextField,
   Button,
 } from "@mui/material";
 import { setModalComment } from "../../redux/commentModelSlice";
 import TimeAgo from "timeago-react";
-import { useConfirm } from "material-ui-confirm";
-
+import Comment from "./Comment";
 // import { RiBookmarkFill } from "@react-icons/all-files/ri/RiBookmarkFill.esm"//when saved done
 
 import { useDispatch, useSelector } from "react-redux";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { addComment, deleteComment, getComments } from "../../helper/helper";
+import { addComment, getComments } from "../../helper/helper";
 import { useState } from "react";
 
 const CommentModal = () => {
-  const confirm = useConfirm();
   const [body, setBody] = useState("");
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.post?.value);
@@ -83,20 +78,6 @@ const CommentModal = () => {
     });
   };
   // handle delete
-  const handleDelete = (commentId) => {
-    confirm({
-      title: "Are you sure you want to delete comment?",
-      confirmationButtonProps: { autoFocus: true },
-    })
-      .then(() => {
-        deleteComment(commentId).then(() => {
-          queryClient.refetchQueries({ queryKey: ["comments", postId] });
-        });
-      })
-      .catch(() => {
-        console.log("canceled");
-      });
-  };
 
   return (
     <Modal
@@ -155,6 +136,7 @@ const CommentModal = () => {
                 alt="user"
                 src=""
                 sx={{
+                  bgcolor:"primary.light",
                   width: 40,
                   height: 40,
                   marginY: 1,
@@ -211,66 +193,7 @@ const CommentModal = () => {
                   </Typography>
                 ) : (
                   commentQuery.data.map((doc) => {
-                    return (
-                      <div key={doc._id}>
-                        <ListItem disableGutters>
-                          <ListItemAvatar>
-                            <Avatar
-                              alt="user"
-                              src={doc.profileUrl}
-                              sx={{
-                                width: 35,
-                                height: 35,
-                              }}
-                            />
-                          </ListItemAvatar>
-                          <ListItemText
-                            sx={{ display: "inline" }}
-                            primary={
-                              <Typography
-                                component={"span"}
-                                variant="body1"
-                                color="initial"
-                                sx={{
-                                  fontSize: "12px",
-                                  fontWeight: "600",
-                                }}
-                              >
-                                {doc.username}
-                              </Typography>
-                            }
-                            secondary={
-                              <>
-                                <Typography
-                                  component={"span"}
-                                  sx={{
-                                    overflowWrap: "break-word", // Set the overflowWrap property
-                                    wordBreak: "break-word", // Add wordBreak property for better support
-                                    fontSize: "16px",
-                                  }}
-                                  color="initial"
-                                >
-                                  {doc.body}
-                                </Typography>
-                              </>
-                            }
-                          />
-                          {doc.userId === userId && (
-                            <Button
-                              color="error"
-                              onClick={() => {
-                                handleDelete(doc._id);
-                              }}
-                            >
-                              <Typography variant="body2" color="initial">
-                                delete
-                              </Typography>
-                            </Button>
-                          )}
-                        </ListItem>
-                        <Divider />
-                      </div>
-                    );
+                    return <Comment doc={doc} key={doc._id} />;
                   })
                 )}
               </List>
