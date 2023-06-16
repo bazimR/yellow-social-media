@@ -4,6 +4,7 @@ import { homePost } from "../../helper/helper";
 import { useSelector } from "react-redux";
 import PostLg from "./PostLg";
 import CommentModal from "./CommentModal";
+import Story from "./Story";
 
 const Post = () => {
   const userId = useSelector((state) => state.user.value._id);
@@ -22,12 +23,12 @@ const Post = () => {
       container
       direction="row"
       sx={{
-        height: "75vh",
+        height: "100vh",
         overflow: "auto",
-        paddingTop: 1,
         padding:3
       }}
     >
+      <Story/>
       {modal && <CommentModal/>}
 
       {postQuery.data.pages.map((page) =>

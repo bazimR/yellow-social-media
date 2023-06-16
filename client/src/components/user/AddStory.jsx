@@ -5,62 +5,9 @@ import UseAnimations from "react-useanimations";
 import LoadingButton from "@mui/lab/LoadingButton";
 import imageVector from "../../assets/post6.png";
 import PropTypes from "prop-types";
-import { newPost } from "../../helper/helper";
-import { useState } from "react";
-import { useSelector } from "react-redux";
-import { useMutation ,useQueryClient} from "@tanstack/react-query";
 import loading from "react-useanimations/lib/loading";
-const PostModal = ({ modal, setModal }) => {
-  const queryClient = useQueryClient()
-  const [caption, setCaption] = useState("");
-  const [file, setFile] = useState(null);
-  const user = useSelector((state) => state.user.value);
-  const formData = new FormData();
-  formData.append("image", file);
-  formData.append("caption", caption);
-  formData.append("userId", user._id);
-  formData.append("username", user.username);
-  const [selectedImg, setSelectedImg] = useState(null);
-  // mutation
-  const createPostMn = useMutation({
-    mutationFn: newPost,
-    onSuccess: () => {
-      setFile(null);
-      setSelectedImg(null);
-      setCaption("");
-      setModal(!modal);
-      queryClient.refetchQueries({queryKey:['posts']})
-    },
-  });
-  // handling submit
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    createPostMn.mutate(formData);
-  };
-  const onUpload = (e) => {
-    const uploadedFile = e.target.files[0];
-    setSelectedImg(URL.createObjectURL(uploadedFile));
-    setFile(uploadedFile);
-  };
-  const BoxStyle = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: {
-      lg: "30%",
-    },
-    height: "auto",
-    bgcolor: "background.paper",
-    borderRadius: "15px",
-    boxShadow: 24,
-    p: 0,
-  };
 
-  const handleClose = () => {
-    setModal(false);
-  };
-
+const AddStory = () => {
   return (
     <Modal disableAutoFocus={true} open={modal} onClose={handleClose}>
       <Box sx={BoxStyle}>
@@ -167,9 +114,4 @@ const PostModal = ({ modal, setModal }) => {
   );
 };
 
-PostModal.propTypes = {
-  modal: PropTypes.bool.isRequired,
-  setModal: PropTypes.func.isRequired,
-};
-
-export default PostModal;
+export default AddStory;

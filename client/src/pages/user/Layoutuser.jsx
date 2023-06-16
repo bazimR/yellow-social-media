@@ -36,6 +36,7 @@ const Layoutuser = () => {
   }
   const confirm = useConfirm();
   const [modal, setModal] = useState(false);
+  const [storyModal, setStoryModal] = useState(false)
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState();
   const navigate = useNavigate();
@@ -294,12 +295,7 @@ const Layoutuser = () => {
             justifyContent="left"
             alignItems="flex-start"
           >
-            <Typography
-              sx={{ fontWeight: 500, fontSize: "1.4rem" }}
-              color="initial"
-            >
-              ADS
-            </Typography>
+           
           </Grid>
         </Grid>
         <Grid item xs={20} justifyContent={"center"}>

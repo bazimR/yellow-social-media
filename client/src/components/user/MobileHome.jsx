@@ -9,7 +9,7 @@ const MobileHome = () => {
        <Story/>
         <MobilePost/>
       </Grid>
-      <Grid item xs={10} md={10} style={{ backgroundColor: "lightgray" }}>
+      <Grid item xs={10} md={10} >
       </Grid>
     </Grid>
   );
