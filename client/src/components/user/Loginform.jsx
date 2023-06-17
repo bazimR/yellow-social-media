@@ -40,6 +40,7 @@ const Loginform = () => {
     <form onSubmit={formik.handleSubmit}>
       <Grid item marginY={4} xs={12}>
         <TextField
+        autoComplete="email"
           {...formik.getFieldProps("email")}
           style={{
             borderTopLeftRadius: "6px",
@@ -53,6 +54,7 @@ const Loginform = () => {
       </Grid>
       <Grid item xs={12} marginY={4}>
         <TextField
+          autoComplete="current-password"
           style={{
             borderTopLeftRadius: "6px",
             borderTopRightRadius: "6px",
@@ -68,7 +70,12 @@ const Loginform = () => {
       <Grid item xs={12} marginY={4}>
         <Button
           variant="contained"
-          sx={{ bgcolor: "primary.main", fontSize: 20, fontWeight: "600" ,color:'white'}}
+          sx={{
+            bgcolor: "primary.main",
+            fontSize: 20,
+            fontWeight: "600",
+            color: "white",
+          }}
           disableElevation
           size="large"
           fullWidth

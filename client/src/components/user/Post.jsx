@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import PostLg from "./PostLg";
 import CommentModal from "./CommentModal";
 import Story from "./Story";
+import PostSkelton from "./PostSkelton";
 
 const Post = () => {
   const userId = useSelector((state) => state.user.value._id);
@@ -15,9 +16,6 @@ const Post = () => {
     queryFn: ({ pageParams = 1 }) => homePost(userId, pageParams),
     refetchOnWindowFocus: false,
   });
-
-  if (postQuery.isLoading) return <h1>loading</h1>;
-
   return (
     <Grid
       container
@@ -25,16 +23,20 @@ const Post = () => {
       sx={{
         height: "100vh",
         overflow: "auto",
-        padding:3
+        padding: 3,
       }}
     >
-      <Story/>
-      {modal && <CommentModal/>}
+      <Story />
+      {modal && <CommentModal />}
 
-      {postQuery.data.pages.map((page) =>
-        page.map((posts) => {
-          return <PostLg posts={posts} key={posts._id} />;
-        })
+      {postQuery.isLoading ? (
+        <PostSkelton />
+      ) : (
+        postQuery.data.pages.map((page) =>
+          page.map((posts) => {
+            return <PostLg posts={posts} key={posts._id} />;
+          })
+        )
       )}
     </Grid>
   );
