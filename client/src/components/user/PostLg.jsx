@@ -71,7 +71,7 @@ const PostLg = ({ posts }) => {
         <CardActions sx={{ top: 0, left: 0, padding: 0 }}>
           <Avatar
             alt="user"
-            src=""
+            src={posts.profileUrl}
             sx={{
               bgcolor: "primary.light",
               width: 40,
@@ -90,6 +90,9 @@ const PostLg = ({ posts }) => {
             }}
           >
             {posts.username}
+            <Typography sx={{ fontSize: "10px" }} color="#737373">
+              <TimeAgo live={false} datetime={posts.Date} />
+            </Typography>
           </Typography>
         </CardActions>
         <CardContent
@@ -113,34 +116,6 @@ const PostLg = ({ posts }) => {
               justifyContent: "flex-start",
             }}
           >
-            <Grid
-              item
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "inherit",
-              }}
-            >
-              <Typography
-                variant="body1"
-                color="secondary.darker"
-                sx={{ cursor: "default", fontWeight: 500 }}
-              >
-                {posts.caption}
-              </Typography>
-              <Typography sx={{ fontSize: "12px" }} color="#737373">
-                <TimeAgo live={false} datetime={posts.Date} />
-              </Typography>
-            </Grid>
-            <Grid item mt={1}>
-              <Typography
-                variant="body1"
-                color="secondary.darker"
-                sx={{ cursor: "default", fontWeight: 500 }}
-              >
-                {likeCount} likes
-              </Typography>
-            </Grid>
             <Grid
               item
               sx={{
@@ -189,6 +164,30 @@ const PostLg = ({ posts }) => {
                 </IconButton>
               </Grid>
             </Grid>
+            <Grid item>
+              <Typography
+                variant="body1"
+                color="secondary.darker"
+                sx={{ cursor: "default", fontWeight: 500 }}
+              >
+                {likeCount} likes
+              </Typography>
+            </Grid>
+            <Grid
+              item
+              sx={{
+                display: "flex",
+                justifyContent: "flex-start",
+                alignItems: "center",
+              }}
+            >
+              <Typography
+                sx={{fontSize:'16px',color:'secondary.darker' ,fontWeight:500 ,}}
+              >
+                {posts.username}
+              </Typography>
+              <Typography sx={{fontSize:'14px',color:'#747474' ,fontWeight:500 , paddingX:1}}>{posts.caption}</Typography>
+            </Grid>
           </Grid>
         </CardActions>
       </Card>
@@ -198,7 +197,6 @@ const PostLg = ({ posts }) => {
 
 PostLg.propTypes = {
   posts: propTypes.object.isRequired,
-  isFetchingNextPage: propTypes.bool.isRequired,
 };
 
 export default PostLg;

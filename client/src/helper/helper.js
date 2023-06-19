@@ -172,3 +172,13 @@ export async function homeStory(userId) {
         return Promise.reject({ error, msg: "story retriving failed" });
     }
 }
+
+export async function googleSignIn(creds) {
+    try {
+        const { data } = await axios.post('/user/googlesignin', creds)
+        return Promise.resolve(data)
+    } catch (error) {
+        console.error(error);
+        return Promise.reject({ error, msg: "google sign in failed" });
+    }
+}

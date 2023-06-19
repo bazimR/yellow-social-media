@@ -1,7 +1,6 @@
 import {
   Grid,
   Card,
-  CardContent,
   CardActions,
   Typography,
   Skeleton,
@@ -63,13 +62,7 @@ const PostSkelton = () => {
               />
             </Typography>
           </CardActions>
-          <CardContent
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
+         
             <Skeleton
                animation='wave'
               sx={{
@@ -81,7 +74,7 @@ const PostSkelton = () => {
               }}
               variant="rounded"
             />
-          </CardContent>
+          
           <CardActions>
             <Grid
               container
@@ -118,7 +111,7 @@ const PostSkelton = () => {
                 <Skeleton
                    animation='wave'
                   variant="text"
-                  width={"100%"}
+                  width={"30%"}
                   sx={{ fontSize: "1rem" }}
                 />
               </Grid>

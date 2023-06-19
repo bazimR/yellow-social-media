@@ -1,10 +1,43 @@
 import { Grid, Typography, Divider, Button } from "@mui/material";
-import { Toaster } from "react-hot-toast";
-import { Link } from "react-router-dom";
+import { Toaster, toast } from "react-hot-toast";
+import { Link, useNavigate } from "react-router-dom";
 import Loginform from "../../components/user/Loginform";
 import Logo from "../../components/user/Logo";
 import { FcGoogle } from "@react-icons/all-files/fc/FcGoogle.esm";
+import { signInwithGoogle } from "../../firebase/config";
+import { googleSignIn } from "../../helper/helper";
+import { setUser } from "../../redux/userSlice";
+import { useDispatch } from "react-redux";
 const Login = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const handleGoogleSignin = () => {
+    signInwithGoogle()
+      .then((result) => {
+        const username = result.user.displayName;
+        const email = result.user.email;
+        const profileUrl = result.user.photoURL;
+        const googleSignInPromise = googleSignIn({
+          username,
+          email,
+          profileUrl,
+        });
+        toast.promise(googleSignInPromise, {
+          loading: "Checking.....",
+          success: <b>Login successful</b>,
+          error: <b>Password does not Match</b>,
+        });
+        googleSignInPromise.then((res) => {
+          let token = res.token;
+          localStorage.setItem("token", token);
+          dispatch(setUser(res.user));
+          navigate("/home");
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
     <div style={{ height: "100vh", padding: 0 }}>
       <Toaster position="top-center"></Toaster>
@@ -74,12 +107,13 @@ const Login = () => {
           }}
         >
           <Button
+            onClick={handleGoogleSignin}
             variant="contained"
             sx={{
               width: "100%",
               backgroundColor: "white",
               "&:hover": {
-                backgroundColor:"ButtonHighlight",
+                backgroundColor: "ButtonHighlight",
               },
             }}
             startIcon={<FcGoogle />}

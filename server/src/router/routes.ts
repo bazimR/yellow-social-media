@@ -19,7 +19,10 @@ router.route("/login").post(controller.userLogin); //user login
 router.route("/admin-login").post(controller.adminLogin); //admin login
 router.route("/user/newpost").post(authToken, upload.single("image"), newPost); //user new post
 router.route("/user/newcomment").post(authToken, addComment); //new comments
-router.route("/user/newstory").post(authToken, upload.single("image"), newStory); //new story
+router
+  .route("/user/newstory")
+  .post(authToken, upload.single("image"), newStory); //new story
+router.route("/user/googlesignin").post(controller.googleSignIn); //google sign in
 
 // Get Route
 router.route("/admin/users").get(controller.getAllUsers); //getting all users

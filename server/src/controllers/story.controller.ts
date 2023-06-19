@@ -104,6 +104,9 @@ export async function homeStory(req: Request, res: Response) {
           );
           doc.set("profileUrl", profileImg, { strict: false });
         }
+        if (user?.profileUrl) {
+          doc.set("profileUrl", user.profileUrl, { strict: false });
+        }
         return doc;
       });
       const signedData = await Promise.all(signingPromises);

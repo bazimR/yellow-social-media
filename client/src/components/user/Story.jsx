@@ -12,6 +12,7 @@ import { setModalStory } from "../../redux/storyModalSlice";
 import { useQuery } from "@tanstack/react-query";
 import { homeStory } from "../../helper/helper";
 import StorySkelton from "./StorySkelton";
+import { setDataViewStory, setViewStoryModal } from "../../redux/viewStoryModalSlice";
 const Story = () => {
   const style = {
     background: " rgba( 255, 255, 255, 0.1 )",
@@ -34,6 +35,10 @@ const Story = () => {
   const openAddStory = () => {
     dispatch(setModalStory(true));
   };
+  const handleViewStory = (doc) => {
+    dispatch(setDataViewStory(doc))
+    dispatch(setViewStoryModal(true))
+  };
   return (
     <Grid
       p={1}
@@ -44,10 +49,9 @@ const Story = () => {
         justifyContent: "flex-start",
         alignItems: "center",
         overflow: "auto",
-        paddingBottom: 0,
-        marginBottom: 3,
+        paddingBottom: 3,
         top: 0,
-        position: "inherit",
+        marginBottom: "auto",
       }}
     >
       <Grid item sx={{ mr: 1, my: 2 }}>
@@ -91,21 +95,29 @@ const Story = () => {
                     backgroundPosition: "center",
                   }}
                 >
-                  <CardActionArea>
-                    <Avatar
-                      sx={{
-                        backgroundColor: "primary.light",
-                        position: "absolute",
-                        width: 35,
-                        height: 35,
-                        mx: -1,
-                        my: -1,
-                      }}
-                      alt="user profile"
-                      src={doc.profileUrl}
-                      variant="rounded"
-                    />
-                  </CardActionArea>
+                  <Avatar
+                    sx={{
+                      backgroundColor: "primary.light",
+                      position: "absolute",
+                      width: 35,
+                      height: 35,
+                      mx: -1,
+                      my: -1,
+                      border: 2,
+                      borderColor: "white",
+                    }}
+                    alt="user profile"
+                    src={doc.profileUrl}
+                    variant="rounded"
+                  />
+                  <CardActionArea
+                    onClick={()=>handleViewStory(doc)}
+                    sx={{
+                      margin: -10,
+                      width: "20em",
+                      height: "20em",
+                    }}
+                  ></CardActionArea>
                 </CardContent>
               </Card>
             </Grid>

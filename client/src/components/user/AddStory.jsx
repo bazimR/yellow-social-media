@@ -96,7 +96,7 @@ const AddStory = () => {
               }}
               color="primary.dark"
             >
-              story will be only seen for a day
+              remember story will be only seen for a day
             </Typography>
           </Grid>
           <Grid

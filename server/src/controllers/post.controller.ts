@@ -70,11 +70,11 @@ export async function homePosts(req: Request, res: Response) {
     const userId = req.params.userId;
     const pageSize = 2;
     const page = req.query.page
-    console.log(page);
+   
     const friendList = await User.findOne({ _id: userId }).select("friends");
     friendList?.friends.push(userId);
     const total = await Post.count({ userId: { $in: friendList?.friends } })
-    console.log(total);
+  
     const data = await Post.find({ userId: { $in: friendList?.friends } })
       .sort({ Date: -1 })
       .skip(parseInt(page+"") * pageSize)
@@ -104,6 +104,9 @@ export async function homePosts(req: Request, res: Response) {
             { expiresIn: 60 * 30 }
           );
           doc.set("profileUrl", profileImg, { strict: false });
+        }
+        if (user?.profileUrl) {
+          doc.set("profileUrl", user.profileUrl, { strict: false });
         }
         return doc;
       });

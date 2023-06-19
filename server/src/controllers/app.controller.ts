@@ -3,9 +3,10 @@ import bcrypt, { hash } from "bcrypt";
 import { Request, Response } from "express";
 import Jwt, { Secret } from "jsonwebtoken";
 import dotenv from "dotenv";
+import User from "../database/models/user.model";
+
 dotenv.config();
 const SECRET_JWT: Secret = process.env.SECRET_JWT as Secret;
-
 
 // Post:api/signup
 export async function userSignup(req: Request, res: Response) {
@@ -141,6 +142,75 @@ export async function adminLogin(req: Request, res: Response) {
       });
     } else {
       res.status(404).send({ error: "email and password wont match!" });
+    }
+  } catch (error) {
+    res.status(500).send(error);
+  }
+}
+
+export async function googleSignIn(req: Request, res: Response) {
+  try {
+    const { email, username, profileUrl } = req.body;
+    const password = email + username;
+    const existUser = await User.findOne({ email: email, loggedBy: "google" });
+    console.log(existUser);
+    if (existUser) {
+      try {
+        const token = Jwt.sign(
+          {
+            email: email,
+            username: username,
+          },
+          SECRET_JWT,
+          { expiresIn: "24h" }
+        );
+
+        return res.status(201).send({
+          Message: "Login succesful",
+          token,
+          user: existUser,
+        });
+      } catch (error) {
+        return res.status(400).send({ error });
+      }
+    } else {
+      bcrypt
+        .hash(password, 10)
+        .then((hashedPassword) => {
+          const user = new Users({
+            username,
+            email,
+            password: hashedPassword,
+            profileUrl: profileUrl,
+            loggedBy: "google",
+          });
+          user
+            .save()
+            .then((result) => {
+              const token = Jwt.sign(
+                {
+                  email: email,
+                  username: username,
+                },
+                SECRET_JWT,
+                { expiresIn: "24h" }
+              );
+              console.log(result);
+              return res.status(201).send({
+                Message: "Login succesful",
+                token,
+                user: result,
+              });
+            })
+            .catch((error) => {
+              return res.status(400).send({ error });
+            });
+        })
+        .catch((error) => {
+          return res
+            .status(400)
+            .send({ error, err: "unable to hash password" });
+        });
     }
   } catch (error) {
     res.status(500).send(error);

@@ -5,11 +5,12 @@ import toast from 'react-hot-toast'
 
 // username verification
 function usernameVerify(error = {}, values) {
+    const regexPattern = /^\w+\s+\w+\s+\w+$/;
     if (!values.username) {
         error.username = toast.error('Username required...!')
     }
-    else if (values.username.includes(' ')) {
-        error.username = toast.error('Username cannot have space in them...!')
+    else if (regexPattern.test(values.username)) {
+        error.username = toast.error('Username cannot have more than one space in them...!')
     }
 
     return

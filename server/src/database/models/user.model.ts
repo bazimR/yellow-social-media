@@ -32,6 +32,12 @@ const userSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  profileUrl: {
+    type: String,
+  },
+  loggedBy: {
+    type: String,
+  },
 });
 
 const User = model("user", userSchema, "users");

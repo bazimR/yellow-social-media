@@ -7,6 +7,7 @@ import PostSkelton from "./PostSkelton";
 import { useUsersQuery } from "../../hooks/user/fetch.posts";
 import { useEffect, useRef } from "react";
 import { useIntersection } from "@mantine/hooks";
+import StoryModal from "./StoryModal";
 
 const Post = () => {
   const userId = useSelector((state) => state.user.value._id);
@@ -29,6 +30,7 @@ const Post = () => {
       <Grid
         container
         direction="row"
+
         sx={{
           height: "100vh",
           overflow: "auto",
@@ -37,6 +39,7 @@ const Post = () => {
       >
         <Story />
         {modal && <CommentModal />}
+        <StoryModal/>
 
         {status === "loading" || data === undefined ? (
           <PostSkelton />
@@ -91,7 +94,7 @@ const Post = () => {
             marginBottom: 2,
           }}
         >
-          {hasNextPage || isFetching ? (
+          {hasNextPage || isFetching ||data.pages.length===0? (
             <PostSkelton />
           ) : (
             <Typography color="HighlightText">all caught up...</Typography>
