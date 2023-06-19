@@ -6,7 +6,6 @@ import {
   IconButton,
   Avatar,
   Typography,
-  Badge,
 } from "@mui/material";
 import propTypes from "prop-types";
 import { RiHeartFill } from "@react-icons/all-files/ri/RiHeartFill.esm";
@@ -59,153 +58,147 @@ const PostLg = ({ posts }) => {
   };
   return (
     <>
-      <Grid
-        item
-        xs={12}
-        key={posts._id}
+      <Card
+        style={style}
+        elevation={10}
         sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          marginBottom: 2,
+          width: 500,
+          height: 670,
+          padding: 1,
+          borderRadius: "20px",
         }}
       >
-        <Card
-          style={style}
-          elevation={10}
+        <CardActions sx={{ top: 0, left: 0, padding: 0 }}>
+          <Avatar
+            alt="user"
+            src=""
+            sx={{
+              bgcolor: "primary.light",
+              width: 40,
+              height: 40,
+              marginY: 1,
+            }}
+          />
+          <Typography
+            sx={{
+              paddingLeft: 1,
+              marginRight: 0,
+              fontSize: "0.9em",
+              fontWeight: "fontWeightMedium",
+              color: "black",
+              cursor: "default",
+            }}
+          >
+            {posts.username}
+          </Typography>
+        </CardActions>
+        <CardContent
           sx={{
-            width: 400,
-            height: 535,
-            padding: 1,
+            backgroundImage: `url(${posts.imageUrl})`,
+            backgroundSize: "contain",
+            backgroundPosition: "center",
+            width: 500,
+            height: 500,
+            padding: 0,
             borderRadius: "20px",
           }}
-        >
-          <CardActions sx={{ top: 0, left: 0, padding: 0 }}>
-            <Avatar
-              alt="user"
-              src=""
-              sx={{
-                bgcolor: "primary.light",
-                width: 40,
-                height: 40,
-                marginY: 1,
-              }}
-            />
-            <Typography
-              sx={{
-                paddingLeft: 1,
-                marginRight: 0,
-                fontSize: "0.9em",
-                fontWeight: "fontWeightMedium",
-                color: "black",
-                cursor: "default",
-              }}
-            >
-              {posts.username}
-            </Typography>
-          </CardActions>
-          <CardContent
+        ></CardContent>
+        <CardActions>
+          <Grid
+            container
+            direction={"column"}
             sx={{
-              backgroundImage: `url(${posts.imageUrl})`,
-              backgroundSize: "contain",
-              backgroundPosition: "center",
-              width: 400,
-              height: 400,
               padding: 0,
-              borderRadius: "20px",
+              display: "flex",
+              justifyContent: "flex-start",
             }}
-          ></CardContent>
-          <CardActions>
+          >
             <Grid
-              container
-              direction={"column"}
+              item
               sx={{
-                padding: 0,
                 display: "flex",
-                justifyContent: "flex-start",
+                justifyContent: "space-between",
+                alignItems: "inherit",
               }}
             >
-              <Grid
-                item
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "inherit",
-                }}
+              <Typography
+                variant="body1"
+                color="secondary.darker"
+                sx={{ cursor: "default", fontWeight: 500 }}
               >
-                <Typography
-                  variant="body1"
-                  color="secondary.darker"
-                  sx={{ cursor: "default", fontWeight: 500 }}
+                {posts.caption}
+              </Typography>
+              <Typography sx={{ fontSize: "12px" }} color="#737373">
+                <TimeAgo live={false} datetime={posts.Date} />
+              </Typography>
+            </Grid>
+            <Grid item mt={1}>
+              <Typography
+                variant="body1"
+                color="secondary.darker"
+                sx={{ cursor: "default", fontWeight: 500 }}
+              >
+                {likeCount} likes
+              </Typography>
+            </Grid>
+            <Grid
+              item
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Grid>
+                <IconButton
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleLike(posts._id, userId);
+                  }}
+                  sx={{
+                    color: `${like ? "red" : "black"}`,
+                    padding: 0,
+                  }}
+                  aria-label="like"
                 >
-                  {posts.caption}
-                </Typography>
-                <Typography sx={{ fontSize: "12px" }} color="#737373">
-                  <TimeAgo live={false} datetime={posts.Date} />
-                </Typography>
+                  {/* <Badge
+                    badgeContent={likeCount}
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "right",
+                    }}
+                  > */}
+                  {like ? (
+                    <RiHeartFill style={{ width: "35px", height: "35px" }} />
+                  ) : (
+                    <RiHeartLine style={{ width: "35px", height: "35px" }} />
+                  )}
+                  {/* </Badge> */}
+                </IconButton>
+                <IconButton
+                  onClick={handleComment}
+                  aria-label="comments"
+                  sx={{ color: "black", marginLeft: 1 }}
+                >
+                  <RiChat1Line style={{ width: "35px", height: "35px" }} />
+                </IconButton>
               </Grid>
-              <Grid
-                item
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <Grid>
-                  <IconButton
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleLike(posts._id, userId);
-                    }}
-                    sx={{
-                      color: `${like ? "red" : "black"}`,
-                      padding: 0,
-                    }}
-                    aria-label="like"
-                  >
-                    <Badge
-                      badgeContent={likeCount}
-                      anchorOrigin={{
-                        vertical: "bottom",
-                        horizontal: "right",
-                      }}
-                    >
-                      {like ? (
-                        <RiHeartFill
-                          style={{ width: "35px", height: "35px" }}
-                        />
-                      ) : (
-                        <RiHeartLine
-                          style={{ width: "35px", height: "35px" }}
-                        />
-                      )}
-                    </Badge>
-                  </IconButton>
-                  <IconButton
-                    onClick={handleComment}
-                    aria-label="comments"
-                    sx={{ color: "black", marginLeft: 1 }}
-                  >
-                    <RiChat1Line style={{ width: "35px", height: "35px" }} />
-                  </IconButton>
-                </Grid>
-                <Grid item>
-                  <IconButton sx={{ color: "black", marginLeft: "auto" }}>
-                    <RiBookmarkLine style={{ width: "35px", height: "35px" }} />
-                  </IconButton>
-                </Grid>
+              <Grid item>
+                <IconButton sx={{ color: "black", marginLeft: "auto" }}>
+                  <RiBookmarkLine style={{ width: "35px", height: "35px" }} />
+                </IconButton>
               </Grid>
             </Grid>
-          </CardActions>
-        </Card>
-      </Grid>
+          </Grid>
+        </CardActions>
+      </Card>
     </>
   );
 };
 
 PostLg.propTypes = {
   posts: propTypes.object.isRequired,
+  isFetchingNextPage: propTypes.bool.isRequired,
 };
 
 export default PostLg;

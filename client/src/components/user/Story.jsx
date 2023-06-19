@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setModalStory } from "../../redux/storyModalSlice";
 import { useQuery } from "@tanstack/react-query";
 import { homeStory } from "../../helper/helper";
+import StorySkelton from "./StorySkelton";
 const Story = () => {
   const style = {
     background: " rgba( 255, 255, 255, 0.1 )",
@@ -28,7 +29,7 @@ const Story = () => {
     queryFn: () => {
       return homeStory(userId);
     },
-    refetchOnWindowFocus:false
+    refetchOnWindowFocus: false,
   });
   const openAddStory = () => {
     dispatch(setModalStory(true));
@@ -72,43 +73,45 @@ const Story = () => {
           </CardContent>
         </Card>
       </Grid>
-      {isLoading
-        ? ""
-        : data.map((doc) => {
-            return (
-              <Grid sx={{ mr: 1 }} item key={doc._id}>
-                <Card style={style} elevation={10}>
-                  <CardContent
-                    sx={{
-                      position: "relative",
-                      width: "5em",
-                      height: "8em",
-                      background: `url(${doc.imageUrl})`,
-                      backgroundSize: "cover",
-                      backgroundRepeat: "no-repeat",
-                      backgroundPosition: "center",
-                    }}
-                  >
-                    <CardActionArea>
-                      <Avatar
-                        sx={{
-                          backgroundColor: "primary.light",
-                          position: "absolute",
-                          width: 35,
-                          height: 35,
-                          mx: -1,
-                          my: -1,
-                        }}
-                        alt="user profile"
-                        src={doc.profileUrl}
-                        variant="rounded"
-                      />
-                    </CardActionArea>
-                  </CardContent>
-                </Card>
-              </Grid>
-            );
-          })}
+      {isLoading ? (
+        <StorySkelton />
+      ) : (
+        data.map((doc) => {
+          return (
+            <Grid sx={{ mr: 1 }} item key={doc._id}>
+              <Card style={style} elevation={10}>
+                <CardContent
+                  sx={{
+                    position: "relative",
+                    width: "5em",
+                    height: "8em",
+                    background: `url(${doc.imageUrl})`,
+                    backgroundSize: "cover",
+                    backgroundRepeat: "no-repeat",
+                    backgroundPosition: "center",
+                  }}
+                >
+                  <CardActionArea>
+                    <Avatar
+                      sx={{
+                        backgroundColor: "primary.light",
+                        position: "absolute",
+                        width: 35,
+                        height: 35,
+                        mx: -1,
+                        my: -1,
+                      }}
+                      alt="user profile"
+                      src={doc.profileUrl}
+                      variant="rounded"
+                    />
+                  </CardActionArea>
+                </CardContent>
+              </Card>
+            </Grid>
+          );
+        })
+      )}
     </Grid>
   );
 };

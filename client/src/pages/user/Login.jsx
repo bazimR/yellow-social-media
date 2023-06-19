@@ -6,7 +6,7 @@ import Logo from "../../components/user/Logo";
 import { FcGoogle } from "@react-icons/all-files/fc/FcGoogle.esm";
 const Login = () => {
   return (
-    <div style={{height:"100vh",padding:0}}>
+    <div style={{ height: "100vh", padding: 0 }}>
       <Toaster position="top-center"></Toaster>
       <Grid
         container
@@ -14,11 +14,10 @@ const Login = () => {
         justifyContent="center"
         alignItems="center"
       >
-        <Grid item xs={12} >
+        <Grid item xs={12}>
           <Logo />
         </Grid>
         <Grid
-          
           item
           xs={12}
           sm={6}
@@ -51,7 +50,11 @@ const Login = () => {
             },
           }}
         >
-          <Divider orientation="horizontal"><Typography variant="body1" color="primary.dark">OR</Typography></Divider>
+          <Divider orientation="horizontal">
+            <Typography variant="body1" color="primary.dark">
+              OR
+            </Typography>
+          </Divider>
         </Grid>
         <Grid
           marginY={4}
@@ -72,14 +75,16 @@ const Login = () => {
         >
           <Button
             variant="contained"
-            color="secondary"
-            sx={{ width: "100%" }}
+            sx={{
+              width: "100%",
+              backgroundColor: "white",
+              "&:hover": {
+                backgroundColor:"ButtonHighlight",
+              },
+            }}
             startIcon={<FcGoogle />}
           >
-            <Typography
-              sx={{ fontSize: "1em", fontWeight: 600 }}
-              color="ActiveCaption"
-            >
+            <Typography sx={{ fontSize: "1em", fontWeight: 600 }}>
               Sign in with Google account?
             </Typography>
           </Button>
@@ -88,17 +93,16 @@ const Login = () => {
           <Typography variant="body1" color="InfoText" p={1}>
             New to yellow?,{" "}
             <Link to={"/signup"} style={{ color: "HighlightText" }}>
-              {" "}
               Sign up
             </Link>
           </Typography>
-      <footer style={{ textAlign: "center",}}>
-        <Typography variant="body2" color="ActiveCaption">
-          © 2023 Yellow. All rights reserved
-        </Typography>
-      </footer>
-      </Grid>
+          <footer style={{ textAlign: "center" }}>
+            <Typography variant="body2" color="ActiveCaption">
+              © 2023 Yellow. All rights reserved
+            </Typography>
+          </footer>
         </Grid>
+      </Grid>
     </div>
   );
 };

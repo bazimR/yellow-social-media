@@ -7,7 +7,7 @@ import { store, persistor } from "./redux/store.js";
 import { ConfirmProvider } from "material-ui-confirm";
 import { PersistGate } from "redux-persist/integration/react";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
-
+import {ReactQueryDevtools} from '@tanstack/react-query-devtools'
 import theme from "./theme/Theme.js";
 
 
@@ -22,6 +22,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <PersistGate loading={null} persistor={persistor}>
             <ConfirmProvider>
               <App />
+              <ReactQueryDevtools initialIsOpen={false} />
             </ConfirmProvider>
           </PersistGate>
         </QueryClientProvider>

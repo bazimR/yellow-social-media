@@ -32,7 +32,7 @@ const CommentModal = () => {
     left: "50%",
     transform: "translate(-50%, -50%)",
     width: {
-      lg: "60em",
+      lg: "70em",
     },
     bgcolor: "background.paper",
     borderRadius: "15px",
@@ -58,9 +58,7 @@ const CommentModal = () => {
     },
     refetchOnWindowFocus: true,
   });
-  if (commentQuery.isLoading) {
-    return <h1>loading</h1>;
-  }
+
   // mutation
   const handleCommentSubmit = () => {
     const formData = {
@@ -92,8 +90,8 @@ const CommentModal = () => {
             <Card
               elevation={0}
               sx={{
-                width: 500,
-                height: 500,
+                width: 600,
+                height: 600,
                 padding: 1,
                 borderRadius: "10px",
               }}
@@ -103,8 +101,8 @@ const CommentModal = () => {
                   backgroundImage: `url(${posts.imageUrl})`,
                   backgroundSize: "contain",
                   backgroundPosition: "center",
-                  width: 500,
-                  height: 500,
+                  width: 600,
+                  height: 600,
                   padding: 0,
                   borderRadius: "10px",
                 }}
@@ -136,7 +134,7 @@ const CommentModal = () => {
                 alt="user"
                 src=""
                 sx={{
-                  bgcolor:"primary.light",
+                  bgcolor: "primary.light",
                   width: 40,
                   height: 40,
                   marginY: 1,
@@ -176,8 +174,8 @@ const CommentModal = () => {
             </Grid>
             <Grid item>
               <Divider />
-              <List sx={{ height: 360, overflow: "auto" }}>
-                {commentQuery.data.length === 0 ? (
+              <List sx={{ height: 458, overflow: "auto" }}>
+                {commentQuery.isLoading||commentQuery.data.length === 0 ? (
                   <Typography
                     component={"span"}
                     variant="body2"

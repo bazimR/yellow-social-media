@@ -29,7 +29,7 @@ const PostModal = ({ modal, setModal }) => {
       setSelectedImg(null);
       setCaption("");
       setModal(!modal);
-      queryClient.refetchQueries({queryKey:['posts']})
+      queryClient.refetchQueries({queryKey:['posts',user._id]})
     },
   });
   // handling submit

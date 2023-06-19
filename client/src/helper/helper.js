@@ -51,14 +51,22 @@ export async function newPost(formData) {
     }
 }
 
-export async function homePost(userId, pageNumber) {
+export async function homePost(userId, pageParams) {
     try {
+
         const { data } = await axios.get(`/home/homeposts/${userId}`, {
             params: {
-                page: pageNumber
+                page: pageParams
             }
         })
-        return data
+        const datasaver = {
+            results: data.data,
+            total: data.total,
+            next: data.total > data.page * data.limit
+                ? pageParams + 1
+                : undefined,
+        };
+        return datasaver;
     } catch (error) {
         console.error(error)
         return Promise.reject({ error: "fetching posts failed" })
@@ -157,7 +165,7 @@ export async function addStory(formData) {
 
 export async function homeStory(userId) {
     try {
-        const {data} = await axios.get(`/home/homestory/${userId}`)
+        const { data } = await axios.get(`/home/homestory/${userId}`)
         return data
     } catch (error) {
         console.error(error);
