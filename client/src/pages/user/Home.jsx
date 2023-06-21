@@ -13,7 +13,7 @@ import { useSelector } from "react-redux";
 const Home = () => {
   const style = {
     background:
-      "linear-gradient(to bottom , rgba(255,255,255,0) 5%, rgba(	80, 199, 255, 0.37) 40%)",
+      "linear-gradient(to bottom , rgba(255,255,255,0) 0%, rgba(	255, 255, 255, 0.5) 35%)",
   };
   const styleBox = {
     boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)",
@@ -23,7 +23,7 @@ const Home = () => {
   };
   const user = useSelector((state) => state.user.value);
   const imageAddress =
-    "https://images.unsplash.com/photo-1676793894040-b6dd72276620?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Z2xhc3Ntb3JwaGlzbXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60";
+    "https://images.unsplash.com/photo-1684569547117-e2d19fc6d796?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Z2xhc3Ntb3JwaGlzbXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60";
   return (
     <>
       <Grid container sx={{ display: { xs: "none", lg: "flex" } }}>
