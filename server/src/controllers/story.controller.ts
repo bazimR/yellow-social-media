@@ -18,7 +18,7 @@ export async function newStory(req: Request, res: Response) {
     const cutoffTime = new Date(Date.now() - 24 * 60 * 60 * 1000);
     const file = req.file;
     const { userId } = req.body;
-    const hasStory = await Story.find({ userId, date: { $gte: cutoffTime } });
+    const hasStory = await Story.find({ userId});
 
     if (hasStory.length > 0) {
       await Story.updateMany(
@@ -71,12 +71,12 @@ export async function homeStory(req: Request, res: Response) {
   const cutoffTime = new Date(Date.now() - 24 * 60 * 60 * 1000);
   try {
     const userId = req.params.userId;
-    const friendList = await User.findOne({ _id: userId }).select("friends");
-    friendList?.friends.push(userId);
+    const friendList = await User.findOne({ _id: userId }).select("following");
+    friendList?.following.push(userId);
     const data = await Story.find({
-      userId: { $in: friendList?.friends },
-      date: { $gte: cutoffTime },
-      expired:false
+      userId: { $in: friendList?.following },
+      Date: { $gte: cutoffTime },
+      expired: false,
     }).sort({ date: -1 });
     if (!data) {
       res.status(404).send({ error: "no story", data });

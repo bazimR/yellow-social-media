@@ -2,7 +2,7 @@ body {
     margin: 0;
     padding: 0;
     background-image: cover;
-  background-image: linear-gradient(to bottom right, #ffffff 0%, #ffffff 20%,#50c7ff 100%);
+  background-image: linear-gradient(to bottom right, #ffffff 0%, #ffffff 10%,#50c7ff 100%);
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center center;

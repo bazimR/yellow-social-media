@@ -60,10 +60,9 @@ const PostLg = ({ posts }) => {
     <>
       <Card
         style={style}
-        elevation={10}
         sx={{
-          width: 500,
-          height: 670,
+          width: 450,
+          height: 620,
           padding: 1,
           borderRadius: "20px",
         }}
@@ -80,6 +79,7 @@ const PostLg = ({ posts }) => {
             }}
           />
           <Typography
+            component={"span"}
             sx={{
               paddingLeft: 1,
               marginRight: 0,
@@ -100,8 +100,8 @@ const PostLg = ({ posts }) => {
             backgroundImage: `url(${posts.imageUrl})`,
             backgroundSize: "contain",
             backgroundPosition: "center",
-            width: 500,
-            height: 500,
+            width: 450,
+            height: 450,
             padding: 0,
             borderRadius: "20px",
           }}
@@ -136,19 +136,11 @@ const PostLg = ({ posts }) => {
                   }}
                   aria-label="like"
                 >
-                  {/* <Badge
-                    badgeContent={likeCount}
-                    anchorOrigin={{
-                      vertical: "bottom",
-                      horizontal: "right",
-                    }}
-                  > */}
                   {like ? (
                     <RiHeartFill style={{ width: "35px", height: "35px" }} />
                   ) : (
                     <RiHeartLine style={{ width: "35px", height: "35px" }} />
                   )}
-                  {/* </Badge> */}
                 </IconButton>
                 <IconButton
                   onClick={handleComment}
@@ -178,15 +170,28 @@ const PostLg = ({ posts }) => {
               sx={{
                 display: "flex",
                 justifyContent: "flex-start",
-                alignItems: "center",
+                alignItems: "baseline",
               }}
             >
               <Typography
-                sx={{fontSize:'16px',color:'secondary.darker' ,fontWeight:500 ,}}
+                sx={{
+                  fontSize: "16px",
+                  color: "secondary.darker",
+                  fontWeight: 500,
+                }}
               >
                 {posts.username}
               </Typography>
-              <Typography sx={{fontSize:'14px',color:'#747474' ,fontWeight:500 , paddingX:1}}>{posts.caption}</Typography>
+              <Typography
+                sx={{
+                  fontSize: "14px",
+                  color: "#747474",
+                  fontWeight: 500,
+                  paddingX: 1,
+                }}
+              >
+                {posts.caption}
+              </Typography>
             </Grid>
           </Grid>
         </CardActions>

@@ -87,8 +87,8 @@ const Story = () => {
                 <CardContent
                   sx={{
                     position: "relative",
-                    width: "5em",
-                    height: "8em",
+                    width: "5.2em",
+                    height: "8.2em",
                     background: `url(${doc.imageUrl})`,
                     backgroundSize: "cover",
                     backgroundRepeat: "no-repeat",

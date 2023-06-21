@@ -31,8 +31,8 @@ const PostSkelton = () => {
           style={style}
           elevation={10}
           sx={{
-            width: 500,
-            height: 670,
+            width: 450,
+            height: 620,
             padding: 1,
             borderRadius: "20px",
           }}
@@ -66,8 +66,8 @@ const PostSkelton = () => {
             <Skeleton
                animation='wave'
               sx={{
-                width: 500,
-                height: 500,
+                width: 450,
+                height: 450,
                 padding: 0,
                 margin: 0,
                 borderRadius: "20px",
@@ -127,7 +127,7 @@ const PostSkelton = () => {
                    animation='wave'
                   variant="text"
                   width={"100%"}
-                  height={40}
+                  height={70}
                   sx={{ fontSize: "1rem" }}
                 />
               </Grid>

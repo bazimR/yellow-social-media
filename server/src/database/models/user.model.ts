@@ -18,7 +18,10 @@ const userSchema = new Schema({
   profile: {
     type: String,
   },
-  friends: {
+  following: {
+    type: Array,
+  },
+  follower: {
     type: Array,
   },
   isPrivate: {
@@ -35,7 +38,13 @@ const userSchema = new Schema({
   profileUrl: {
     type: String,
   },
+  biography: {
+    type: String,
+  },
   loggedBy: {
+    type: String,
+  },
+  coverImage: {
     type: String,
   },
 });

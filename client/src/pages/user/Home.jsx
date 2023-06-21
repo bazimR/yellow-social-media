@@ -9,9 +9,11 @@ const Home = () => {
         <Grid item xs={8} sx={{ display: "flex", flexDirection: "column" }}>
           <Post />
         </Grid>
-        <Grid item xs={4} sx={{ height: "100vh" }}>
-          left
-        </Grid>
+        <Grid
+          item
+          xs={4}
+          style={{ position: "fixed", right: 0, top: 0, height: "100vh" }}
+        ></Grid>
       </Grid>
       <MobileHome />
     </>

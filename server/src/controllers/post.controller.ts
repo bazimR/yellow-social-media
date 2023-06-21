@@ -71,11 +71,11 @@ export async function homePosts(req: Request, res: Response) {
     const pageSize = 2;
     const page = req.query.page
    
-    const friendList = await User.findOne({ _id: userId }).select("friends");
-    friendList?.friends.push(userId);
-    const total = await Post.count({ userId: { $in: friendList?.friends } })
+    const friendList = await User.findOne({ _id: userId }).select("following");
+    friendList?.following.push(userId);
+    const total = await Post.count({ userId: { $in: friendList?.following } })
   
-    const data = await Post.find({ userId: { $in: friendList?.friends } })
+    const data = await Post.find({ userId: { $in: friendList?.following } })
       .sort({ Date: -1 })
       .skip(parseInt(page+"") * pageSize)
       .limit(pageSize);

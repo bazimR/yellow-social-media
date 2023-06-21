@@ -4,6 +4,9 @@ import { Request, Response } from "express";
 import Jwt, { Secret } from "jsonwebtoken";
 import dotenv from "dotenv";
 import User from "../database/models/user.model";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { GetObjectCommand } from "@aws-sdk/client-s3";
+import { bucketName, s3 } from "../database/AWSBUCKET/awsbucket";
 
 dotenv.config();
 const SECRET_JWT: Secret = process.env.SECRET_JWT as Secret;
@@ -82,6 +85,28 @@ export async function userLogin(req: Request, res: Response) {
     Users.findOne({ email: email }).then(async (user: any) => {
       const passChecks = await bcrypt.compare(password, user?.password);
       if (passChecks) {
+        if (user?.profile) {
+          const profileImg = await getSignedUrl(
+            s3,
+            new GetObjectCommand({
+              Key: user.profile,
+              Bucket: bucketName,
+            }),
+            { expiresIn: 60 * 60 }
+          );
+          user.set("profileUrl", profileImg, { strict: false });
+        }
+        if (user?.coverImage) {
+          const coverImageUrl = await getSignedUrl(
+            s3,
+            new GetObjectCommand({
+              Key: user.coverImage,
+              Bucket: bucketName,
+            }),
+            { expiresIn: 60 * 60 }
+          );
+          user.set("coverImageUrl", coverImageUrl, { strict: false });
+        }
         const { password, ...rest } = user.toObject();
         const token = Jwt.sign(
           {

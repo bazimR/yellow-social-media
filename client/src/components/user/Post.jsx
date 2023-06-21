@@ -30,7 +30,6 @@ const Post = () => {
       <Grid
         container
         direction="row"
-
         sx={{
           height: "100vh",
           overflow: "auto",
@@ -39,14 +38,13 @@ const Post = () => {
       >
         <Story />
         {modal && <CommentModal />}
-        <StoryModal/>
-
+        <StoryModal />
         {status === "loading" || data === undefined ? (
           <PostSkelton />
         ) : (
           data.pages.map((page) => {
             return page.results.map((posts, i) => {
-              if (i === page.results.length - 1) {
+              if (i === page.results.length ) {
                 return (
                   <Grid
                     key={posts._id}
@@ -94,7 +92,7 @@ const Post = () => {
             marginBottom: 2,
           }}
         >
-          {hasNextPage || isFetching ||data.pages.length===0? (
+          {hasNextPage || isFetching || data.pages.length === 0 ? (
             <PostSkelton />
           ) : (
             <Typography color="HighlightText">all caught up...</Typography>
