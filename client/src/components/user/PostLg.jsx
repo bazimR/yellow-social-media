@@ -6,6 +6,8 @@ import {
   IconButton,
   Avatar,
   Typography,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import propTypes from "prop-types";
 import { RiHeartFill } from "@react-icons/all-files/ri/RiHeartFill.esm";
@@ -20,11 +22,16 @@ import { likePost } from "../../helper/helper";
 import { useState } from "react";
 import { setPostRedux } from "../../redux/postSlice";
 import { setModalComment } from "../../redux/commentModelSlice";
+import { RiMoreFill } from "@react-icons/all-files/ri/RiMoreFill.esm";
+import { useConfirm } from "material-ui-confirm";
 
 const PostLg = ({ posts }) => {
+  const confirm = useConfirm();
   const userId = useSelector((state) => state.user.value._id);
   const [likeCount, setLikeCount] = useState(posts.likes.length);
   const [like, setLike] = useState(posts.likes.includes(userId));
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
   const likeMn = useMutation({
     mutationKey: ["posts"],
     mutationFn: likePost,
@@ -48,6 +55,25 @@ const PostLg = ({ posts }) => {
   const handleComment = () => {
     dispatch(setPostRedux(posts));
     dispatch(setModalComment(true));
+  };
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleDelete = () => {
+    confirm({
+      title: "Are you sure you want to delete comment?",
+      confirmationButtonProps: { autoFocus: true },
+    })
+      .then(() => {
+        setAnchorEl(null);
+      })
+      .catch(() => {
+        console.log("canceled");
+      });
   };
   const style = {
     background: "rgba(255, 255, 255, 0.1)",
@@ -94,6 +120,37 @@ const PostLg = ({ posts }) => {
               <TimeAgo live={false} datetime={posts.Date} />
             </Typography>
           </Typography>
+
+          <IconButton
+            sx={{ marginLeft: "auto" }}
+            id="basic-button"
+            aria-controls={open ? "basic-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? "true" : undefined}
+            onClick={handleClick}
+          >
+            <RiMoreFill />
+          </IconButton>
+          <Menu
+            id="basic-menu"
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            MenuListProps={{
+              "aria-labelledby": "basic-button",
+            }}
+          >
+            {posts.userId === userId && (
+              <MenuItem
+                sx={{ color: "red" }}
+                onClick={() => {
+                  handleDelete();
+                }}
+              >
+                delete
+              </MenuItem>
+            )}
+          </Menu>
         </CardActions>
         <CardContent
           sx={{
