@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-    value:'',
+    value: '',
+    postModal: false
 }
 
 export const postSlice = createSlice({
@@ -11,9 +12,12 @@ export const postSlice = createSlice({
         setPostRedux: (state, action) => {
             state.value = action.payload
         },
+        setPostModal: (state, action) => {
+            state.postModal = action.payload
+        }
     },
 })
 
-export const { setPostRedux } = postSlice.actions
+export const { setPostRedux, setPostModal } = postSlice.actions
 
 export default postSlice.reducer

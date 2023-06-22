@@ -1,7 +1,13 @@
 import { Router } from "express";
 import * as controller from "../controllers/app.controller";
 import multer from "multer";
-import { newPost, homePosts, likePost } from "../controllers/post.controller";
+import {
+  newPost,
+  homePosts,
+  likePost,
+  deletePost,
+  editPost,
+} from "../controllers/post.controller";
 import { authToken } from "../middleware/auth.token";
 import {
   addComment,
@@ -33,6 +39,9 @@ router.route("/home/homestory/:userId").get(homeStory); // user's home posts
 // Put Route
 router.route("/post/like/:postId").put(authToken, likePost); //post like/unlike
 router.route("/user/deletecomment").put(authToken, deteleComments); //delete comment
+router.route("/user/deletepost/:postId").put(authToken, deletePost); //delete post
+router.route("/user/editpost/").put(authToken, editPost); //edit post
+
 // router test
 router.route("/test").all();
 export default router;

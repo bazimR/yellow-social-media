@@ -37,6 +37,7 @@ const Post = () => {
         }}
       >
         <Story />
+
         {modal && <CommentModal />}
         <StoryModal />
         {status === "loading" || data === undefined ? (
@@ -44,7 +45,7 @@ const Post = () => {
         ) : (
           data.pages.map((page) => {
             return page.results.map((posts, i) => {
-              if (i === page.results.length ) {
+              if (i === page.results.length) {
                 return (
                   <Grid
                     key={posts._id}

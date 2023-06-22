@@ -13,7 +13,7 @@ import { useSelector } from "react-redux";
 const Home = () => {
   const style = {
     background:
-      "linear-gradient(to bottom , rgba(255,255,255,0) 0%, rgba(	255, 255, 255, 0.5) 35%)",
+      "linear-gradient(to bottom , rgba(255,255,255,0) 0%, rgba(255,255,255, 0.5) 35%)",
   };
   const styleBox = {
     boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)",
@@ -41,7 +41,7 @@ const Home = () => {
               sx={{
                 backgroundImage: `url(${imageAddress})`,
                 height: 150,
-                width: 380,
+                width: 350,
                 display: "flex",
                 justifyContent: "end",
                 flexDirection: "column",

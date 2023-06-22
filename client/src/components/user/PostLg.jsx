@@ -16,11 +16,14 @@ import { RiBookmarkLine } from "@react-icons/all-files/ri/RiBookmarkLine.esm";
 // import { RiBookmarkFill } from "@react-icons/all-files/ri/RiBookmarkFill.esm"//when saved done
 import TimeAgo from "timeago-react";
 import { RiChat1Line } from "@react-icons/all-files/ri/RiChat1Line.esm";
+import { RiEdit2Line } from "@react-icons/all-files/ri/RiEdit2Line.esm";
+import { RiDeleteBin6Line } from "@react-icons/all-files/ri/RiDeleteBin6Line.esm";
+
 import { useDispatch, useSelector } from "react-redux";
-import { useMutation } from "@tanstack/react-query";
-import { likePost } from "../../helper/helper";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { deletePost, likePost } from "../../helper/helper";
 import { useState } from "react";
-import { setPostRedux } from "../../redux/postSlice";
+import { setPostModal, setPostRedux } from "../../redux/postSlice";
 import { setModalComment } from "../../redux/commentModelSlice";
 import { RiMoreFill } from "@react-icons/all-files/ri/RiMoreFill.esm";
 import { useConfirm } from "material-ui-confirm";
@@ -32,6 +35,7 @@ const PostLg = ({ posts }) => {
   const [like, setLike] = useState(posts.likes.includes(userId));
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+  const queryClient = useQueryClient();
   const likeMn = useMutation({
     mutationKey: ["posts"],
     mutationFn: likePost,
@@ -49,7 +53,6 @@ const PostLg = ({ posts }) => {
   const handleLike = (postId, userId) => {
     likeMn.mutate({ postId, userId });
   };
-
   const dispatch = useDispatch();
 
   const handleComment = () => {
@@ -65,11 +68,14 @@ const PostLg = ({ posts }) => {
 
   const handleDelete = () => {
     confirm({
-      title: "Are you sure you want to delete comment?",
+      title: "Are you sure you want to delete this post?",
       confirmationButtonProps: { autoFocus: true },
     })
       .then(() => {
         setAnchorEl(null);
+        deletePost(posts._id).then(() => {
+          queryClient.invalidateQueries(["posts", userId]);
+        });
       })
       .catch(() => {
         console.log("canceled");
@@ -81,6 +87,13 @@ const PostLg = ({ posts }) => {
     backdropFilter: "blur(1.9px)",
     WebkitBackdropFilter: "blur(1.9px)",
     border: "1px solid rgba(255, 255, 255, 0.18)",
+  };
+
+  const handleEdit = () => {
+    console.log("hi");
+    dispatch(setPostRedux(posts));
+    dispatch(setPostModal(true));
+    setAnchorEl(null);
   };
   return (
     <>
@@ -131,26 +144,42 @@ const PostLg = ({ posts }) => {
           >
             <RiMoreFill />
           </IconButton>
-          <Menu
-            id="basic-menu"
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            MenuListProps={{
-              "aria-labelledby": "basic-button",
-            }}
-          >
-            {posts.userId === userId && (
+
+          {posts.userId === userId && (
+            <Menu
+              id="basic-menu"
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              MenuListProps={{
+                "aria-labelledby": "basic-button",
+              }}
+            >
               <MenuItem
                 sx={{ color: "red" }}
                 onClick={() => {
-                  handleDelete();
+                  handleDelete(posts._id);
                 }}
               >
-                delete
+                <RiDeleteBin6Line />
+                <Typography variant="body1" ml={1} color="initial">
+                  delete
+                </Typography>
               </MenuItem>
-            )}
-          </Menu>
+
+              <MenuItem
+                sx={{ color: "primary.main" }}
+                onClick={() => {
+                  handleEdit();
+                }}
+              >
+                <RiEdit2Line />
+                <Typography variant="body1" ml={1} color="initial">
+                  edit
+                </Typography>
+              </MenuItem>
+            </Menu>
+          )}
         </CardActions>
         <CardContent
           sx={{

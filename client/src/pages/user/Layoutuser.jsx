@@ -27,6 +27,7 @@ import { setPostRedux } from "../../redux/postSlice";
 import { setModalComment } from "../../redux/commentModelSlice";
 import AddStory from "../../components/user/AddStory";
 import { setModalStory } from "../../redux/storyModalSlice";
+import EditPost from "../../components/user/EditPost";
 
 const Layoutuser = () => {
   const user = useSelector((state) => state.user.value);
@@ -76,7 +77,7 @@ const Layoutuser = () => {
     <>
       <AddStory />
       <PostModal modal={modal} setModal={setModal} />
-
+      <EditPost />
       {/* large devices */}
       <Grid
         container

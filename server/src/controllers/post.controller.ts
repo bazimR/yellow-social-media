@@ -69,15 +69,21 @@ export async function homePosts(req: Request, res: Response) {
   try {
     const userId = req.params.userId;
     const pageSize = 2;
-    const page = req.query.page
-   
+    const page = req.query.page;
+
     const friendList = await User.findOne({ _id: userId }).select("following");
     friendList?.following.push(userId);
-    const total = await Post.count({ userId: { $in: friendList?.following } })
-  
-    const data = await Post.find({ userId: { $in: friendList?.following } })
+    const total = await Post.count({
+      userId: { $in: friendList?.following },
+      isBlocked: false,
+    });
+
+    const data = await Post.find({
+      userId: { $in: friendList?.following },
+      isBlocked: false,
+    })
       .sort({ Date: -1 })
-      .skip(parseInt(page+"") * pageSize)
+      .skip(parseInt(page + "") * pageSize)
       .limit(pageSize);
     if (!data) {
       res.status(404).send({ error: "no pages", data });
@@ -111,11 +117,11 @@ export async function homePosts(req: Request, res: Response) {
         return doc;
       });
       const signedData = await Promise.all(signingPromises);
-      res.status(201).json({
+      res.status(200).json({
         data: signedData,
         total,
         page,
-        limit:pageSize
+        limit: pageSize,
       });
     }
   } catch (error) {
@@ -143,6 +149,40 @@ export async function likePost(req: Request, res: Response) {
     });
   } catch (error) {
     console.error(error);
+    res.status(500).send({ error, err: "internal server error" });
+  }
+}
+
+export async function deletePost(req: Request, res: Response) {
+  try {
+    const { postId } = req.params;
+    await Post.findByIdAndUpdate({ _id: postId }, { $set: { isBlocked: true } })
+      .then(() => {
+        res.status(201).send({ Message: "post deleted" });
+      })
+      .catch((error) => {
+        res.status(400).send({ error, err: "post delete failed" });
+      });
+  } catch (error) {
+    res.status(500).send({ error, err: "internal server error" });
+  }
+}
+
+export async function editPost(req: Request, res: Response) {
+  try {
+    const { postId, caption } = req.body;
+    console.log(postId,caption);
+    await Post.findByIdAndUpdate(
+      { _id: postId },
+      { $set: { caption: caption } }
+    )
+      .then(() => {
+        res.status(201).send({ Message: "post edited" });
+      })
+      .catch((error) => {
+        res.status(400).send({ error, err: "post editing failed" });
+      });
+  } catch (error) {
     res.status(500).send({ error, err: "internal server error" });
   }
 }

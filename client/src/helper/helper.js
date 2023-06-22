@@ -182,3 +182,47 @@ export async function googleSignIn(creds) {
         return Promise.reject({ error, msg: "google sign in failed" });
     }
 }
+
+
+export async function deletePost(postId) {
+    const token = localStorage.getItem('token');
+    try {
+
+        const { data } = await axios.put(
+            `/user/deletepost/${postId}`,
+            {},
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        return Promise.resolve(data);
+    } catch (error) {
+        console.error(error);
+        return Promise.reject({ error, msg: "Delete post failed" });
+    }
+}
+
+
+export async function editPost(postData) {
+    const token = localStorage.getItem('token');
+    try {
+        console.log(postData);
+        const { data } = await axios.put(
+            `/user/editpost/`,
+            postData,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        return Promise.resolve(data);
+    } catch (error) {
+        console.error(error);
+        return Promise.reject({ error, msg: "Edit post failed" });
+    }
+}
