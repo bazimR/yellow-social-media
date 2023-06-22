@@ -18,7 +18,7 @@ const Post = () => {
 
   const { ref, entry } = useIntersection({
     root: lastPostReft.current,
-    threshold: 1,
+    threshold: 0.75,
   });
 
   useEffect(() => {

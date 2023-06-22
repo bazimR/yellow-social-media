@@ -171,7 +171,6 @@ export async function deletePost(req: Request, res: Response) {
 export async function editPost(req: Request, res: Response) {
   try {
     const { postId, caption } = req.body;
-    console.log(postId,caption);
     await Post.findByIdAndUpdate(
       { _id: postId },
       { $set: { caption: caption } }
@@ -182,6 +181,50 @@ export async function editPost(req: Request, res: Response) {
       .catch((error) => {
         res.status(400).send({ error, err: "post editing failed" });
       });
+  } catch (error) {
+    res.status(500).send({ error, err: "internal server error" });
+  }
+}
+
+export async function profilePost(req: Request, res: Response) {
+  try {
+    const { userId } = req.params;
+    const data = await Post.find({ userId: userId, isBlocked: false }).sort({
+      Date: -1,
+    });
+    if (!data) {
+      res.status(404).send({ error: "no pages", data });
+    } else {
+      const signingPromises = data.map(async (doc) => {
+        const imageUrl = await getSignedUrl(
+          s3,
+          new GetObjectCommand({
+            Key: doc.image,
+            Bucket: bucketName,
+          }),
+          { expiresIn: 60 * 30 }
+        );
+        doc.imageUrl = imageUrl;
+        const user = await User.findById(doc?.userId);
+        if (user?.profile) {
+          const profileImg = await getSignedUrl(
+            s3,
+            new GetObjectCommand({
+              Key: user.profile,
+              Bucket: bucketName,
+            }),
+            { expiresIn: 60 * 30 }
+          );
+          doc.set("profileUrl", profileImg, { strict: false });
+        }
+        if (user?.profileUrl) {
+          doc.set("profileUrl", user.profileUrl, { strict: false });
+        }
+        return doc;
+      });
+      const signedData = await Promise.all(signingPromises);
+      res.status(200).send(signedData);
+    }
   } catch (error) {
     res.status(500).send({ error, err: "internal server error" });
   }

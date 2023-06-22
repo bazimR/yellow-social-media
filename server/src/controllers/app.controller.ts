@@ -178,7 +178,6 @@ export async function googleSignIn(req: Request, res: Response) {
     const { email, username, profileUrl } = req.body;
     const password = email + username;
     const existUser = await User.findOne({ email: email, loggedBy: "google" });
-    console.log(existUser);
     if (existUser) {
       try {
         const token = Jwt.sign(
@@ -220,7 +219,6 @@ export async function googleSignIn(req: Request, res: Response) {
                 SECRET_JWT,
                 { expiresIn: "24h" }
               );
-              console.log(result);
               return res.status(201).send({
                 Message: "Login succesful",
                 token,

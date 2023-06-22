@@ -209,7 +209,6 @@ export async function deletePost(postId) {
 export async function editPost(postData) {
     const token = localStorage.getItem('token');
     try {
-        console.log(postData);
         const { data } = await axios.put(
             `/user/editpost/`,
             postData,
@@ -224,5 +223,15 @@ export async function editPost(postData) {
     } catch (error) {
         console.error(error);
         return Promise.reject({ error, msg: "Edit post failed" });
+    }
+}
+
+export async function profilePosts(userId) {
+    try {
+        const { data } = await axios.get(`/user/profileposts/${userId}`)
+        return Promise.resolve(data)
+    } catch (error) {
+        console.error(error);
+        return Promise.reject({ error, msg: "fetching posts failed" });
     }
 }

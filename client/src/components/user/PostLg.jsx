@@ -90,7 +90,6 @@ const PostLg = ({ posts }) => {
   };
 
   const handleEdit = () => {
-    console.log("hi");
     dispatch(setPostRedux(posts));
     dispatch(setPostModal(true));
     setAnchorEl(null);

@@ -7,6 +7,7 @@ import {
   likePost,
   deletePost,
   editPost,
+  profilePost,
 } from "../controllers/post.controller";
 import { authToken } from "../middleware/auth.token";
 import {
@@ -35,6 +36,7 @@ router.route("/admin/users").get(controller.getAllUsers); //getting all users
 router.route("/home/homeposts/:userId").get(homePosts); // user's home posts
 router.route("/user/comments/:postId").get(getComments); //getting comments
 router.route("/home/homestory/:userId").get(homeStory); // user's home posts
+router.route("/user/profileposts/:userId").get(profilePost); // user's profile posts
 
 // Put Route
 router.route("/post/like/:postId").put(authToken, likePost); //post like/unlike
