@@ -235,3 +235,34 @@ export async function profilePosts(userId) {
         return Promise.reject({ error, msg: "fetching posts failed" });
     }
 }
+
+export async function editProfile(formData) {
+    const token = localStorage.getItem('token');
+    try {
+        const { data } = await axios.put('/user/editprofile/', formData, {
+            headers: {
+                "Content-Type": 'multipart/form-data',
+                "authorization": `Bearer ${token}`
+            }
+        })
+        return Promise.resolve(data)
+    } catch (error) {
+        console.error(error);
+        return Promise.reject({ error, msg: "editing profile failed" });
+    }
+}
+export async function editCover(formData) {
+    const token = localStorage.getItem('token');
+    try {
+        const { data } = await axios.put('/user/editcover/', formData, {
+            headers: {
+                "Content-Type": 'multipart/form-data',
+                "authorization": `Bearer ${token}`
+            }
+        })
+        return Promise.resolve(data.user)
+    } catch (error) {
+        console.error(error);
+        return Promise.reject({ error, msg: "editing cover failed" });
+    }
+}

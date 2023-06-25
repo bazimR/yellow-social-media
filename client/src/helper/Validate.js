@@ -1,7 +1,27 @@
 import toast from 'react-hot-toast'
 
+// name first/last verification
+function firstnameVerify(error = {}, values) {
+    const regexPattern = /^\w+\s+\w+\s+\w+$/;
+    if (!values.firstname) {
+        error.firstname = toast.error('firstname required...!')
+    }
+    else if (regexPattern.test(values.firstname)) {
+        error.firstname = toast.error('firstname cannot have more than one space in them...!')
+    }
 
-
+    return error
+}
+function lastnameVerify(error = {}, values) {
+    const regexPattern = /^\w+\s+\w+\s+\w+$/;
+    if (!values.lastname) {
+        error.lastname = toast.error('lastname required...!')
+    }
+    else if (regexPattern.test(values.lastname)) {
+        error.lastname = toast.error('lastname cannot have more than one space in them...!')
+    }
+    return error
+}
 
 // username verification
 function usernameVerify(error = {}, values) {
@@ -13,7 +33,7 @@ function usernameVerify(error = {}, values) {
         error.username = toast.error('Username cannot have more than one space in them...!')
     }
 
-    return
+    return error
 }
 // email verification 
 function emailVerify(error = {}, values) {
@@ -69,7 +89,13 @@ function otpVerify(error = {}, values) {
     return error;
 }
 
-
+function bioVerify(error = {}, values) {
+    if (!values.biography) {
+        error.biography = toast.error('bio required...!')
+    }
+    else if (values.biography.length > 60) error.bio = toast.error('maximum 60 characters only')
+    return error;
+}
 
 
 // sign up validation
@@ -100,5 +126,14 @@ export async function adminloginValidation(values) {
     const error = emailVerify({}, values)
     if (error.email) return error
     passwordVerify(error, values)
+    return error
+
+}
+export async function profileValidation(values) {
+    const error = firstnameVerify({}, values)
+    if (error.firstname) return error
+    lastnameVerify(error, values)
+    if (error.lastname) return error
+    bioVerify(error, values)
     return error
 }

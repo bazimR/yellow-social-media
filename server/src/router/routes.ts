@@ -1,5 +1,5 @@
 import { Router } from "express";
-import * as controller from "../controllers/app.controller";
+import * as controller from "../controllers/user.controller";
 import multer from "multer";
 import {
   newPost,
@@ -43,6 +43,10 @@ router.route("/post/like/:postId").put(authToken, likePost); //post like/unlike
 router.route("/user/deletecomment").put(authToken, deteleComments); //delete comment
 router.route("/user/deletepost/:postId").put(authToken, deletePost); //delete post
 router.route("/user/editpost/").put(authToken, editPost); //edit post
+router.route("/user/editprofile/").put(authToken, upload.single("image"), controller.editProfile); //edit profile
+router.route("/user/editcover/").put(authToken,upload.single("image"), controller.editCover); //edit cover
+
+
 
 // router test
 router.route("/test").all();

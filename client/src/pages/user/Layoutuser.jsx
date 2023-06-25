@@ -8,7 +8,6 @@ import {
   ListItemText,
   Divider,
   Collapse,
-  Avatar,
 } from "@mui/material";
 import { useConfirm } from "material-ui-confirm";
 import { TiHome } from "@react-icons/all-files/ti/TiHome.esm";
@@ -21,16 +20,18 @@ import { TiPower } from "@react-icons/all-files/ti/TiPower.esm";
 import { useState } from "react";
 import MobileNav from "../../components/user/MobileNav";
 import PostModal from "../../components/user/PostModal";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setUser } from "../../redux/userSlice";
 import { setPostRedux } from "../../redux/postSlice";
 import { setModalComment } from "../../redux/commentModelSlice";
 import AddStory from "../../components/user/AddStory";
 import { setModalStory } from "../../redux/storyModalSlice";
 import EditPost from "../../components/user/EditPost";
+import EditProfile from "../../components/user/EditProfile";
+import { Toaster } from "react-hot-toast";
+import EditCover from "../../components/user/EditCover";
 
 const Layoutuser = () => {
-  const user = useSelector((state) => state.user.value);
   const style = {
     background: "rgba(255, 255, 255, 0.1)",
     boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)",
@@ -75,9 +76,14 @@ const Layoutuser = () => {
 
   return (
     <>
+      <Toaster position="top-center"></Toaster>
+      {/* all the modals should go here or else something weird happen with them check the issue later */}
       <AddStory />
+      <EditProfile />
       <PostModal modal={modal} setModal={setModal} />
       <EditPost />
+      <EditCover />
+
       {/* large devices */}
       <Grid
         container
@@ -286,26 +292,6 @@ const Layoutuser = () => {
                 />
               </ListItemButton>
               <Collapse in={open} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  <ListItemButton sx={{ pl: 4 }}>
-                    <ListItemIcon>
-                      <Avatar
-                        src={user.profileUrl}
-                        sx={{
-                          width: "1.5em",
-                          height: "1.5em",
-                          backgroundColor: "primary.light",
-                        }}
-                      />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary="My profile"
-                      sx={{
-                        color: "primary.main",
-                      }}
-                    />
-                  </ListItemButton>
-                </List>
                 <List component="div" disablePadding>
                   <ListItemButton
                     onClick={() => {

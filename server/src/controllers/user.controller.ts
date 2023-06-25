@@ -5,12 +5,17 @@ import Jwt, { Secret } from "jsonwebtoken";
 import dotenv from "dotenv";
 import User from "../database/models/user.model";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { GetObjectCommand } from "@aws-sdk/client-s3";
+import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { bucketName, s3 } from "../database/AWSBUCKET/awsbucket";
+import sharp from "sharp";
+import crypto from "crypto";
 
 dotenv.config();
 const SECRET_JWT: Secret = process.env.SECRET_JWT as Secret;
 
+const generateFileName = (bytes = 32) => {
+  return crypto.randomBytes(bytes).toString("hex");
+};
 // Post:api/signup
 export async function userSignup(req: Request, res: Response) {
   try {
@@ -92,7 +97,7 @@ export async function userLogin(req: Request, res: Response) {
               Key: user.profile,
               Bucket: bucketName,
             }),
-            { expiresIn: 60 * 60 }
+            { expiresIn: 60 * 60 * 60 }
           );
           user.set("profileUrl", profileImg, { strict: false });
         }
@@ -103,7 +108,7 @@ export async function userLogin(req: Request, res: Response) {
               Key: user.coverImage,
               Bucket: bucketName,
             }),
-            { expiresIn: 60 * 60 }
+            { expiresIn: 60 * 60 * 60 }
           );
           user.set("coverImageUrl", coverImageUrl, { strict: false });
         }
@@ -235,6 +240,177 @@ export async function googleSignIn(req: Request, res: Response) {
             .send({ error, err: "unable to hash password" });
         });
     }
+  } catch (error) {
+    res.status(500).send(error);
+  }
+}
+
+export async function editProfile(req: Request, res: Response) {
+  try {
+    const formData = req.body;
+    const file = req.file;
+    if (!file) {
+      await User.findOneAndUpdate(
+        { _id: formData.userId },
+        {
+          $set: {
+            firstname: formData.firstname,
+            lastname: formData.lastname,
+            biography: formData.biography,
+          },
+        }
+      );
+
+      const user = await User.findOne({ _id: formData.userId });
+      if (user?.coverImage) {
+        const coverImg = await getSignedUrl(
+          s3,
+          new GetObjectCommand({
+            Key: user?.coverImage,
+            Bucket: bucketName,
+          }),
+          { expiresIn: 60 * 60 * 60 }
+        );
+        user?.set("coverImageUrl", coverImg, { strict: false });
+      }
+      if (user?.profile) {
+        const profileImg = await getSignedUrl(
+          s3,
+          new GetObjectCommand({
+            Key: user?.profile,
+            Bucket: bucketName,
+          }),
+          { expiresIn: 60 * 60 * 60 }
+        );
+        user?.set("profileUrl", profileImg, { strict: false });
+      }
+      res.status(201).send({ user, Message: "edit succesful" });
+    } else {
+      sharp(file?.buffer)
+        .resize({ height: 1080, width: 1080, fit: "cover" }) // Resize to desired dimensions
+        .extend({
+          top: 0,
+          bottom: 0,
+          left: 0,
+          right: 0,
+          background: { r: 255, g: 255, b: 255, alpha: 0.5 }, // Set the background color to white
+        })
+        .toBuffer()
+        .then((Data) => {
+          const fileName = generateFileName();
+          const uploadParams = {
+            Key: fileName as string,
+            Body: Data as Buffer,
+            Bucket: bucketName as string,
+            ContentType: file?.mimetype as string,
+          };
+          s3.send(new PutObjectCommand(uploadParams)).then(async () => {
+            await User.findOneAndUpdate(
+              { _id: formData.userId },
+              {
+                $set: {
+                  firstname: formData.firstname,
+                  lastname: formData.lastname,
+                  biography: formData.biography,
+                  profile: fileName,
+                },
+              }
+            );
+            const user = await User.findById({ _id: formData.userId });
+            if (user?.coverImage) {
+              const coverImg = await getSignedUrl(
+                s3,
+                new GetObjectCommand({
+                  Key: user?.coverImage,
+                  Bucket: bucketName,
+                }),
+                { expiresIn: 60 * 60 * 60 }
+              );
+              user?.set("coverImageUrl", coverImg, { strict: false });
+            }
+            const profileImg = await getSignedUrl(
+              s3,
+              new GetObjectCommand({
+                Key: user?.profile,
+                Bucket: bucketName,
+              }),
+              { expiresIn: 60 * 60 * 60 }
+            );
+            user?.set("profileUrl", profileImg, { strict: false });
+
+            res.status(201).send({ user, Message: "edit succesful" });
+          });
+        })
+        .catch((error) => {
+          res.status(500).send({ error, err: "buffering failed" });
+        });
+    }
+  } catch (error) {
+    res.status(500).send(error);
+  }
+}
+
+export async function editCover(req: Request, res: Response) {
+  try {
+    const { userId } = req.body;
+    const file = req.file;
+    sharp(file?.buffer)
+      .resize({ height: 1080, width: 1980, fit: "cover" }) // Resize to desired dimensions
+      .extend({
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        background: { r: 255, g: 255, b: 255, alpha: 0.5 }, // Set the background color to white
+      })
+      .toBuffer()
+      .then((Data) => {
+        const fileName = generateFileName();
+        const uploadParams = {
+          Key: fileName as string,
+          Body: Data as Buffer,
+          Bucket: bucketName as string,
+          ContentType: file?.mimetype as string,
+        };
+        s3.send(new PutObjectCommand(uploadParams)).then(async () => {
+          await User.findOneAndUpdate(
+            { _id: userId },
+            {
+              $set: {
+                coverImage: fileName,
+              },
+            }
+          );
+          const user = await User.findById({ _id: userId });
+          if (user?.profile) {
+            const profileImg = await getSignedUrl(
+              s3,
+              new GetObjectCommand({
+                Key: user?.profile,
+                Bucket: bucketName,
+              }),
+              { expiresIn: 60 * 60 * 60 }
+            );
+            user?.set("profileUrl", profileImg, { strict: false });
+          }
+          if (user?.coverImage) {
+            const coverImg = await getSignedUrl(
+              s3,
+              new GetObjectCommand({
+                Key: user?.coverImage,
+                Bucket: bucketName,
+              }),
+              { expiresIn: 60 * 60 * 60 }
+            );
+            user?.set("coverImageUrl", coverImg, { strict: false });
+          }
+
+          res.status(201).send({ user, Message: "edit cover succesful" });
+        });
+      })
+      .catch((error) => {
+        res.status(500).send({ error, err: "buffering failed" });
+      });
   } catch (error) {
     res.status(500).send(error);
   }

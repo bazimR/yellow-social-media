@@ -15,6 +15,12 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+  firstname: {
+    type: String,
+  },
+  lastname: {
+    type: String,
+  },
   profile: {
     type: String,
   },
@@ -45,6 +51,9 @@ const userSchema = new Schema({
     type: String,
   },
   coverImage: {
+    type: String,
+  },
+  coverImageUrl: {
     type: String,
   },
 });

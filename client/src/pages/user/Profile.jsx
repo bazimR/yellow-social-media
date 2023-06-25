@@ -11,14 +11,16 @@ import {
   ImageListItem,
 } from "@mui/material";
 import { RiCamera2Fill } from "@react-icons/all-files/ri/RiCamera2Fill.esm";
-import { RiEdit2Fill } from "@react-icons/all-files/ri/RiEdit2Fill.esm";
+import { RiEditFill } from "@react-icons/all-files/ri/RiEditFill.esm";
 import { RiGridFill } from "@react-icons/all-files/ri/RiGridFill.esm";
 import { useQuery } from "@tanstack/react-query";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { profilePosts } from "../../helper/helper";
+import { setCoverModal, setProfileModal } from "../../redux/editProfileSlice";
 
 const Profile = () => {
   const user = useSelector((state) => state.user.value);
+  const dispatch = useDispatch();
   const userId = user._id;
   const { data, isLoading } = useQuery({
     queryKey: ["userPosts", userId],
@@ -31,201 +33,186 @@ const Profile = () => {
     WebkitBackdropFilter: "blur(1.9px)",
     border: "1px solid rgba(255, 255, 255, 0.1)",
   };
-  const imageAddress =
-    "https://images.unsplash.com/photo-1603486002664-a7319421e133?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2484&q=80";
+  const handleProfileEdit = () => {
+    dispatch(setProfileModal(true));
+  };
+  const handleCover = () => {
+    dispatch(setCoverModal(true));
+  };
+
   if (isLoading) return <h1>loading</h1>;
   return (
-    <Grid
-      container
-      direction="row"
-      sx={{
-        display: { xs: "none", lg: "flex" },
-        overflow: "auto",
-        height: "100vh",
-        alignItems: "flex-start",
-      }}
-    >
+    // TODO:refactor!!!!!!!!!!
+    <>
       <Grid
-        item
-        xs={12}
+        container
+        direction="row"
         sx={{
-          top: 0,
-          right: 0,
-          left: 0,
-          p: 2,
-          height: 530,
-          display: "flex",
-          justifyContent: "center",
+          display: { xs: "none", lg: "flex" },
+          overflow: "auto",
+          height: "100vh",
+          alignItems: "flex-start",
         }}
       >
-        <Card
-          sx={{ borderRadius: "15px", height: 500, width: "65vw" }}
-          style={style}
+        <Grid
+          item
+          xs={12}
+          sx={{
+            top: 0,
+            right: 0,
+            left: 0,
+            p: 2,
+            height: 530,
+            display: "flex",
+            justifyContent: "center",
+          }}
         >
-          <CardMedia
-            title="cover-image"
+          <Card
             sx={{
+              borderRadius: "15px",
+              height: 500,
               width: "65vw",
-              height: 300,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              display: "flex",
-              justifyContent: "flex-end",
-              alignItems: "end",
+              paddingBottom: 2,
             }}
-            image={imageAddress}
+            style={style}
           >
-            <Button
+            <CardMedia
+              title="cover-image"
               sx={{
-                margin: 2,
-                paddingX: 2,
-                color: "primary.main",
-                backgroundColor: "white",
-                borderRadius: "10px",
+                width: "65vw",
+                height: 300,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                display: "flex",
+                justifyContent: "flex-end",
+                alignItems: "end",
               }}
-              variant="text"
-              startIcon={<RiCamera2Fill />}
+              image={user.coverImageUrl}
             >
-              edit cover photo
-            </Button>
-          </CardMedia>
-          <Grid
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            <CardContent>
-              <Avatar
-                src={user.profileUrl}
+              <Button
+                onClick={handleCover}
                 sx={{
-                  border: 5,
-                  borderColor: "white",
-                  mt: -10,
-                  position: "sticky",
-                  width: 150,
-                  height: 150,
-                  backgroundColor: "primary.light",
+                  margin: 2,
+                  paddingX: 2,
+                  color: "primary.main",
+                  backgroundColor: "white",
+                  borderRadius: "10px",
                 }}
-              />
-            </CardContent>
-            <Grid sx={{ display: "flex", flexDirection: "column", padding: 0 }}>
-              <Typography
-                component={"span"}
-                sx={{
-                  fontSize: "3.375em",
-                  fontWeight: 400,
-                  color: "primary.dark",
-                }}
+                variant="text"
+                startIcon={<RiCamera2Fill />}
               >
-                {user.username}
-                <Button
-                  size="small"
+                edit cover photo
+              </Button>
+            </CardMedia>
+            <Grid
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <CardContent>
+                <Avatar
+                  src={user.profileUrl}
                   sx={{
-                    marginX: 1,
-                    color: "primary.main",
-                    backgroundColor: "white",
-                    borderRadius: "5px",
-                    alignItems: "center",
-                    paddingX: 1,
+                    border: 5,
+                    borderColor: "white",
+                    mt: -10,
+                    position: "sticky",
+                    width: 150,
+                    height: 150,
+                    backgroundColor: "primary.light",
                   }}
-                  variant="text"
-                  startIcon={
-                    <RiEdit2Fill style={{ width: "12px", height: "12px" }} />
-                  }
-                >
-                  <Typography sx={{ fontSize: "0.775em", fontWeight: 600 }}>
-                    edit profile
-                  </Typography>
-                </Button>
-              </Typography>
+                />
+              </CardContent>
               <Grid
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  paddingY: 1,
-                  justifyContent: "flex-start",
-                  alignItems: "center",
-                }}
+                sx={{ display: "flex", flexDirection: "column", padding: 0 }}
               >
                 <Typography
                   component={"span"}
                   sx={{
-                    fontSize: "16px",
-                    fontWeight: 700,
+                    fontSize: "3.375em",
+                    fontWeight: 400,
                     color: "primary.dark",
-                    mr: 1,
                   }}
                 >
-                  {data.length}
+                  {user.username}
                 </Typography>
-                <Typography
-                  component={"span"}
+                <Grid
                   sx={{
-                    fontSize: "16px",
-                    fontWeight: 500,
-                    color: "primary.dark",
-                    mr: 1,
+                    display: "flex",
+                    flexDirection: "row",
+                    paddingY: 1,
+                    justifyContent: "flex-start",
+                    alignItems: "center",
                   }}
                 >
-                  posts
-                </Typography>
-                <Typography
-                  component={"span"}
-                  sx={{
-                    fontSize: "16px",
-                    fontWeight: 700,
-                    color: "primary.dark",
-                    mr: 1,
-                  }}
-                >
-                  {user.follower.length}
-                </Typography>
-                <Typography
-                  component={"span"}
-                  sx={{
-                    fontSize: "16px",
-                    fontWeight: 500,
-                    color: "primary.dark",
-                    mr: 1,
-                  }}
-                >
-                  followers
-                </Typography>
-                <Typography
-                  component={"span"}
-                  sx={{
-                    fontSize: "16px",
-                    fontWeight: 700,
-                    color: "primary.dark",
-                    mr: 1,
-                  }}
-                >
-                  {user.following.length}
-                </Typography>
-                <Typography
-                  component={"span"}
-                  sx={{
-                    fontSize: "16px",
-                    fontWeight: 500,
-                    color: "primary.dark",
-                  }}
-                >
-                  following
-                </Typography>
-              </Grid>
-              <Typography
-                component={"span"}
-                sx={{
-                  fontSize: "16px",
-                  fontWeight: 300,
-                  color: "primary.dark",
-                }}
-              >
-                {user.email}
-              </Typography>
-              <Box sx={{ width: 300, height: 50, mt: 1 }}>
+                  <Typography
+                    component={"span"}
+                    sx={{
+                      fontSize: "16px",
+                      fontWeight: 700,
+                      color: "primary.dark",
+                      mr: 1,
+                    }}
+                  >
+                    {data.length}
+                  </Typography>
+                  <Typography
+                    component={"span"}
+                    sx={{
+                      fontSize: "16px",
+                      fontWeight: 500,
+                      color: "primary.dark",
+                      mr: 1,
+                    }}
+                  >
+                    posts
+                  </Typography>
+                  <Typography
+                    component={"span"}
+                    sx={{
+                      fontSize: "16px",
+                      fontWeight: 700,
+                      color: "primary.dark",
+                      mr: 1,
+                    }}
+                  >
+                    {user.follower.length}
+                  </Typography>
+                  <Typography
+                    component={"span"}
+                    sx={{
+                      fontSize: "16px",
+                      fontWeight: 500,
+                      color: "primary.dark",
+                      mr: 1,
+                    }}
+                  >
+                    followers
+                  </Typography>
+                  <Typography
+                    component={"span"}
+                    sx={{
+                      fontSize: "16px",
+                      fontWeight: 700,
+                      color: "primary.dark",
+                      mr: 1,
+                    }}
+                  >
+                    {user.following.length}
+                  </Typography>
+                  <Typography
+                    component={"span"}
+                    sx={{
+                      fontSize: "16px",
+                      fontWeight: 500,
+                      color: "primary.dark",
+                    }}
+                  >
+                    following
+                  </Typography>
+                </Grid>
                 <Typography
                   component={"span"}
                   sx={{
@@ -234,67 +221,104 @@ const Profile = () => {
                     color: "primary.dark",
                   }}
                 >
-                  {user.biography || "add bio"}
+                  {user.firstname} {user.lastname}
                 </Typography>
-              </Box>
+                <Box sx={{ width: 300, height: 50, mt: 1 }}>
+                  <Typography
+                    component={"span"}
+                    sx={{
+                      fontSize: "16px",
+                      fontWeight: 400,
+                      color: "primary.dark",
+                    }}
+                  >
+                    {user.biography || "add bio"}
+                  </Typography>
+                </Box>
+              </Grid>
+              <Button
+                onClick={handleProfileEdit}
+                size="medium"
+                sx={{
+                  marginLeft: "auto",
+                  marginRight: 2,
+                  marginTop: "auto",
+                  color: "primary.main",
+                  backgroundColor: "white",
+                  borderRadius: "8px",
+                  alignItems: "center",
+                  paddingX: 1,
+                }}
+                variant="text"
+                startIcon={
+                  <RiEditFill style={{ width: "15px", height: "15px" }} />
+                }
+              >
+                <Typography
+                  sx={{ fontSize: "1em", fontWeight: 600, textAlign: "center" }}
+                >
+                  edit profile
+                </Typography>
+              </Button>
             </Grid>
-          </Grid>
-        </Card>
-      </Grid>
-      <Grid
-        item
-        xs={12}
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
-        <Box
+          </Card>
+        </Grid>
+        <Grid
+          item
+          xs={12}
           sx={{
-            borderRadius: "15px",
-            width: "65vw",
+            display: "flex",
+            justifyContent: "center",
           }}
         >
-          <Grid>
-            <Typography
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                color: "primary.dark",
-                fontSize: "1.5em",
-              }}
-            >
-              <RiGridFill
-                style={{ width: "1.2em", height: "1.2em", marginRight: 5 }}
-              />
-              posts
-            </Typography>
-          </Grid>
-
-          <ImageList
+          <Box
             sx={{
-              overflow: "visible",
-              marginBottom: 5,
               borderRadius: "15px",
+              width: "65vw",
             }}
-            cols={3}
-            rowHeight='auto'
           >
-            {data.map((item) => (
-              <ImageListItem key={item._id}>
-                <img
-                  src={item.imageUrl}
-                  srcSet={item.imageUrl}
-                  alt={item.caption}
-                  loading="lazy"
+            <Grid sx={{ marginY: 3 }}>
+              <Typography
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  color: "primary.dark",
+                  fontSize: "1.5em",
+                }}
+              >
+                <RiGridFill
+                  style={{ width: "1.2em", height: "1.2em", marginRight: 5 }}
                 />
-              </ImageListItem>
-            ))}
-          </ImageList>
-        </Box>
+                posts
+              </Typography>
+            </Grid>
+
+            <ImageList
+              sx={{
+                overflow: "visible",
+                marginBottom: 5,
+                borderRadius: "15px",
+              }}
+              cols={3}
+              rowHeight="auto"
+            >
+              {data.map((item) => (
+                <ImageListItem key={item._id}>
+                  <img
+                    // onClick={handleClick} //TODO: add post view
+                    src={item.imageUrl}
+                    srcSet={item.imageUrl}
+                    alt={item.caption}
+                    loading="lazy"
+                  />
+                </ImageListItem>
+              ))}
+            </ImageList>
+          </Box>
+        </Grid>
       </Grid>
-    </Grid>
+    </>
   );
 };
 

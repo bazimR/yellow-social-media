@@ -20,13 +20,12 @@ const ProfileWidget = () => {
     // border: "1px solid rgba(255, 255, 255, 0.1)",
   };
   const user = useSelector((state) => state.user.value);
-  const imageAddress =
-  "https://images.unsplash.com/photo-1603486002664-a7319421e133?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2484&q=80";
+
   return (
     <Card
       style={styleBox}
       sx={{
-        backgroundImage: `url(${imageAddress})`,
+        backgroundImage: `url(${user.coverImageUrl})`,
         height: "15vh",
         width: "25vw",
         display: "flex",

@@ -14,6 +14,7 @@ import rootReducer from './rootReducer';
 const persistConfig = {
     key: 'root',
     storage,
+    blacklist:['modal','story','editprofile']
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
