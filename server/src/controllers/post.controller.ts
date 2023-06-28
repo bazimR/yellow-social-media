@@ -17,6 +17,7 @@ const generateFileName = (bytes = 32) => {
 export async function newPost(req: Request, res: Response) {
   try {
     const file = req.file;
+
     const { caption, userId, username } = req.body;
     sharp(file?.buffer)
       .resize({ height: 1000, width: 1000, fit: "cover" }) // Resize to desired dimensions
@@ -110,8 +111,7 @@ export async function homePosts(req: Request, res: Response) {
             { expiresIn: 60 * 30 }
           );
           doc.set("profileUrl", profileImg, { strict: false });
-        }
-        if (user?.profileUrl) {
+        } else if (user?.profileUrl) {
           doc.set("profileUrl", user.profileUrl, { strict: false });
         }
         return doc;
@@ -226,6 +226,90 @@ export async function profilePost(req: Request, res: Response) {
       res.status(200).send(signedData);
     }
   } catch (error) {
+    res.status(500).send({ error, err: "internal server error" });
+  }
+}
+
+export async function savePost(req: Request, res: Response) {
+  try {
+    const postId = req.params.postId;
+    const { userId } = req.body;
+
+    await Post.findOne({ _id: postId }).then(async (post) => {
+      if (post?.saved.includes(userId)) {
+        await Post.updateOne({ _id: post?._id }, { $pull: { saved: userId } });
+        res.status(201).send({ Message: "removed save" });
+      } else {
+        await Post.findOneAndUpdate(
+          { _id: post?._id },
+          { $addToSet: { saved: userId } }
+        );
+        res.status(201).send({ Message: "like added" });
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error, err: "internal server error" });
+  }
+}
+
+export async function savedPosts(req: Request, res: Response) {
+  try {
+    const userId = req.params.userId;
+    const pageSize = 2;
+    const page = req.query.page;
+
+    const total = await Post.count({
+      saved: { $in: userId },
+      isBlocked: false,
+    });
+    const data = await Post.find({
+      saved: { $in: [userId] },
+      isBlocked: false,
+    })
+      .sort({ Date: -1 })
+      .skip(parseInt(page + "") * pageSize)
+      .limit(pageSize);
+    if (!data) {
+      res.status(404).send({ error: "no pages", data });
+    } else {
+      const signingPromises = data.map(async (doc) => {
+        const imageUrl = await getSignedUrl(
+          s3,
+          new GetObjectCommand({
+            Key: doc.image,
+            Bucket: bucketName,
+          }),
+          { expiresIn: 60 * 30 }
+        );
+        // here
+        doc.imageUrl = imageUrl;
+        const user = await User.findById(doc?.userId);
+        if (user?.profile) {
+          const profileImg = await getSignedUrl(
+            s3,
+            new GetObjectCommand({
+              Key: user.profile,
+              Bucket: bucketName,
+            }),
+            { expiresIn: 60 * 30 }
+          );
+          doc.set("profileUrl", profileImg, { strict: false });
+        } else if (user?.profileUrl) {
+          doc.set("profileUrl", user.profileUrl, { strict: false });
+        }
+        return doc;
+      });
+      const signedData = await Promise.all(signingPromises);
+      res.status(200).json({
+        data: signedData,
+        total,
+        page,
+        limit: pageSize,
+      });
+    }
+  } catch (error) {
+    console.error(error);
     res.status(500).send({ error, err: "internal server error" });
   }
 }

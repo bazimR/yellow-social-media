@@ -39,9 +39,9 @@ const Post = () => {
         <Story />
 
         {modal && <CommentModal />}
-        <StoryModal />
+        <StoryModal isHome={true} />
         {status === "loading" || data === undefined ? (
-          <PostSkelton />
+          <PostSkelton isHome={true} />
         ) : (
           data.pages.map((page) => {
             return page.results.map((posts, i) => {
@@ -59,7 +59,7 @@ const Post = () => {
                       marginBottom: 2,
                     }}
                   >
-                    <PostLg posts={posts} />
+                    <PostLg isHome={true} posts={posts} />
                   </Grid>
                 );
               } else {
@@ -75,7 +75,7 @@ const Post = () => {
                       marginBottom: 2,
                     }}
                   >
-                    <PostLg posts={posts} />
+                    <PostLg isHome={true} posts={posts} />
                   </Grid>
                 );
               }
@@ -94,7 +94,7 @@ const Post = () => {
           }}
         >
           {hasNextPage || isFetching || data.pages.length === 0 ? (
-            <PostSkelton />
+            <PostSkelton isHome={true} />
           ) : (
             <Typography color="HighlightText">all caught up...</Typography>
           )}

@@ -9,6 +9,7 @@ import { setCoverModal } from "../../redux/editProfileSlice";
 import { setUser } from "../../redux/userSlice";
 import { useMutation } from "@tanstack/react-query";
 import { editCover } from "../../helper/helper";
+import { toast } from "react-hot-toast";
 
 const EditCover = () => {
   const user = useSelector((state) => state.user.value);
@@ -19,6 +20,7 @@ const EditCover = () => {
   const coverMn = useMutation({
     mutationFn: editCover,
     onSuccess: (data) => {
+      toast.success("cover image edited");
       dispatch(setUser(data));
       setSelectedImg(null);
       setFile(null);
@@ -50,7 +52,7 @@ const EditCover = () => {
     const formData = new FormData();
     formData.append("image", file);
     formData.append("userId", user._id);
-    coverMn.mutate(formData)
+    coverMn.mutate(formData);
   };
   return (
     <Modal

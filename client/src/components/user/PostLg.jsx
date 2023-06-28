@@ -13,7 +13,7 @@ import propTypes from "prop-types";
 import { RiHeartFill } from "@react-icons/all-files/ri/RiHeartFill.esm";
 import { RiHeartLine } from "@react-icons/all-files/ri/RiHeartLine.esm";
 import { RiBookmarkLine } from "@react-icons/all-files/ri/RiBookmarkLine.esm";
-// import { RiBookmarkFill } from "@react-icons/all-files/ri/RiBookmarkFill.esm"//when saved done
+import { RiBookmarkFill } from "@react-icons/all-files/ri/RiBookmarkFill.esm"; //when saved done
 import TimeAgo from "timeago-react";
 import { RiChat1Line } from "@react-icons/all-files/ri/RiChat1Line.esm";
 import { RiEdit2Line } from "@react-icons/all-files/ri/RiEdit2Line.esm";
@@ -21,21 +21,25 @@ import { RiDeleteBin6Line } from "@react-icons/all-files/ri/RiDeleteBin6Line.esm
 
 import { useDispatch, useSelector } from "react-redux";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deletePost, likePost } from "../../helper/helper";
+import { deletePost, likePost, savePost } from "../../helper/helper";
 import { useState } from "react";
 import { setPostModal, setPostRedux } from "../../redux/postSlice";
 import { setModalComment } from "../../redux/commentModelSlice";
 import { RiMoreFill } from "@react-icons/all-files/ri/RiMoreFill.esm";
 import { useConfirm } from "material-ui-confirm";
+import { toast } from "react-hot-toast";
 
-const PostLg = ({ posts }) => {
+const PostLg = ({ posts, isHome }) => {
   const confirm = useConfirm();
   const userId = useSelector((state) => state.user.value._id);
   const [likeCount, setLikeCount] = useState(posts.likes.length);
   const [like, setLike] = useState(posts.likes.includes(userId));
+  const [saved, setSaved] = useState(posts.saved.includes(userId));
+
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const queryClient = useQueryClient();
+  const dispatch = useDispatch();
   const likeMn = useMutation({
     mutationKey: ["posts"],
     mutationFn: likePost,
@@ -49,11 +53,21 @@ const PostLg = ({ posts }) => {
       }
     },
   });
+  const savedMn = useMutation({
+    mutationKey: ["posts"],
+    mutationFn: savePost,
+    onSuccess: () => {
+      setSaved(!saved);
+      queryClient.refetchQueries(["saved", userId]);
+    },
+  });
 
   const handleLike = (postId, userId) => {
     likeMn.mutate({ postId, userId });
   };
-  const dispatch = useDispatch();
+  const handleSaved = (postId, userId) => {
+    savedMn.mutate({ postId, userId });
+  };
 
   const handleComment = () => {
     dispatch(setPostRedux(posts));
@@ -75,10 +89,11 @@ const PostLg = ({ posts }) => {
         setAnchorEl(null);
         deletePost(posts._id).then(() => {
           queryClient.invalidateQueries(["posts", userId]);
+          toast.success("post deleted succesful");
         });
       })
       .catch(() => {
-        console.log("canceled");
+        toast.error("post not deleted");
       });
   };
   const style = {
@@ -99,8 +114,8 @@ const PostLg = ({ posts }) => {
       <Card
         style={style}
         sx={{
-          width: 450,
-          height: 620,
+          width: isHome ? 550 : 450,
+          height: isHome ? 720 : 620,
           padding: 1,
           borderRadius: "20px",
         }}
@@ -185,8 +200,8 @@ const PostLg = ({ posts }) => {
             backgroundImage: `url(${posts.imageUrl})`,
             backgroundSize: "contain",
             backgroundPosition: "center",
-            width: 450,
-            height: 450,
+            width: isHome ? 550 : 450,
+            height: isHome ? 550 : 450,
             padding: 0,
             borderRadius: "20px",
           }}
@@ -236,8 +251,24 @@ const PostLg = ({ posts }) => {
                 </IconButton>
               </Grid>
               <Grid item>
-                <IconButton sx={{ color: "black", marginLeft: "auto" }}>
-                  <RiBookmarkLine style={{ width: "35px", height: "35px" }} />
+                <IconButton
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleSaved(posts._id, userId);
+                  }}
+                  sx={{ color: "black", marginLeft: "auto" }}
+                >
+                  {saved ? (
+                    <RiBookmarkFill
+                      style={{
+                        width: "35px",
+                        height: "35px",
+                        color: "#4aa0e7",
+                      }}
+                    />
+                  ) : (
+                    <RiBookmarkLine style={{ width: "35px", height: "35px" }} />
+                  )}
                 </IconButton>
               </Grid>
             </Grid>
@@ -287,6 +318,7 @@ const PostLg = ({ posts }) => {
 
 PostLg.propTypes = {
   posts: propTypes.object.isRequired,
+  isHome: propTypes.bool.isRequired,
 };
 
 export default PostLg;

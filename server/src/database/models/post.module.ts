@@ -22,6 +22,9 @@ const postSchema = new Schema({
   reports: {
     type: Array,
   },
+  saved: {
+    type: Array,
+  },
   isBlocked: {
     type: Boolean,
     default: false,

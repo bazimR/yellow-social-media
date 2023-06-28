@@ -13,6 +13,7 @@ import Usermanage from "../pages/admin/Usermanage";
 import Layoutuser from "../pages/user/Layoutuser";
 import Home from "../pages/user/Home";
 import Profile from "../pages/user/Profile";
+import Saved from "../pages/user/Saved";
 const UserRoutes = () => {
   return (
     <Routes>
@@ -27,7 +28,7 @@ const UserRoutes = () => {
         <Route index element={<Home/>}></Route>
         <Route path="messages" element={ <h1>messages</h1>}></Route>
         <Route path="create" element={ <h1>create</h1>}></Route>
-        <Route path="saved" element={ <h1>saved</h1>}></Route>
+        <Route path="saved" element={<Saved/>}></Route>
         <Route path="settings" element={<h1>settings</h1>}></Route>
         <Route path="profile" element={ <Profile/>}></Route>
       </Route>

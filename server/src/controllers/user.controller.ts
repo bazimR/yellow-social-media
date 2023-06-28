@@ -194,6 +194,29 @@ export async function googleSignIn(req: Request, res: Response) {
           { expiresIn: "24h" }
         );
 
+        if (existUser.profile) {
+          const profileImg = await getSignedUrl(
+            s3,
+            new GetObjectCommand({
+              Key: existUser?.profile,
+              Bucket: bucketName,
+            }),
+            { expiresIn: 60 * 60 * 60 }
+          );
+          existUser?.set("profileUrl", profileImg, { strict: false });
+        }
+        if (existUser?.coverImage) {
+          const coverImg = await getSignedUrl(
+            s3,
+            new GetObjectCommand({
+              Key: existUser?.coverImage,
+              Bucket: bucketName,
+            }),
+            { expiresIn: 60 * 60 * 60 }
+          );
+          existUser?.set("coverImageUrl", coverImg, { strict: false });
+        }
+
         return res.status(201).send({
           Message: "Login succesful",
           token,

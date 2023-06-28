@@ -17,6 +17,9 @@ import { useQuery } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { profilePosts } from "../../helper/helper";
 import { setCoverModal, setProfileModal } from "../../redux/editProfileSlice";
+import { setModalComment } from "../../redux/commentModelSlice";
+import { setPostRedux } from "../../redux/postSlice";
+import CommentModal from "../../components/user/CommentModal";
 
 const Profile = () => {
   const user = useSelector((state) => state.user.value);
@@ -41,9 +44,14 @@ const Profile = () => {
   };
 
   if (isLoading) return <h1>loading</h1>;
+  const handleClick = (post) => {
+    dispatch(setPostRedux(post));
+    dispatch(setModalComment(true));
+  };
   return (
     // TODO:refactor!!!!!!!!!!
     <>
+      <CommentModal/>
       <Grid
         container
         direction="row"
@@ -306,7 +314,8 @@ const Profile = () => {
               {data.map((item) => (
                 <ImageListItem key={item._id}>
                   <img
-                    // onClick={handleClick} //TODO: add post view
+                    style={{cursor:'pointer'}}
+                    onClick={()=>handleClick(item)}
                     src={item.imageUrl}
                     srcSet={item.imageUrl}
                     alt={item.caption}

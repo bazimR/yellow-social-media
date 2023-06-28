@@ -1,11 +1,7 @@
-import {
-  Grid,
-  Card,
-  CardActions,
-  Typography,
-  Skeleton,
-} from "@mui/material";
-const PostSkelton = () => {
+import { Grid, Card, CardActions, Typography, Skeleton } from "@mui/material";
+import propTypes from "prop-types";
+
+const PostSkelton = ({ isHome }) => {
   const skelton = [1];
   const style = {
     background: "rgba(255, 255, 255, 0.1)",
@@ -31,15 +27,15 @@ const PostSkelton = () => {
           style={style}
           elevation={10}
           sx={{
-            width: 450,
-            height: 620,
+            width: isHome ? 550 : 450,
+            height: isHome ? 720 : 620,
             padding: 1,
             borderRadius: "20px",
           }}
         >
           <CardActions sx={{ top: 0, left: 0, padding: 0 }}>
             <Skeleton
-               animation='wave'
+              animation="wave"
               sx={{ margin: 1, padding: 0 }}
               variant="circular"
               width={40}
@@ -55,26 +51,26 @@ const PostSkelton = () => {
               }}
             >
               <Skeleton
-                 animation='wave'
+                animation="wave"
                 variant="text"
                 width={"5em"}
                 sx={{ fontSize: "1rem" }}
               />
             </Typography>
           </CardActions>
-         
-            <Skeleton
-               animation='wave'
-              sx={{
-                width: 450,
-                height: 450,
-                padding: 0,
-                margin: 0,
-                borderRadius: "20px",
-              }}
-              variant="rounded"
-            />
-          
+
+          <Skeleton
+            animation="wave"
+            sx={{
+              width: isHome ? 550 : 450,
+              height: isHome ? 550 : 450,
+              padding: 0,
+              margin: 0,
+              borderRadius: "20px",
+            }}
+            variant="rounded"
+          />
+
           <CardActions>
             <Grid
               container
@@ -94,7 +90,7 @@ const PostSkelton = () => {
                 }}
               >
                 <Skeleton
-                   animation='wave'
+                  animation="wave"
                   variant="text"
                   width={"100%"}
                   sx={{ fontSize: "1rem" }}
@@ -109,7 +105,7 @@ const PostSkelton = () => {
                 }}
               >
                 <Skeleton
-                   animation='wave'
+                  animation="wave"
                   variant="text"
                   width={"30%"}
                   sx={{ fontSize: "1rem" }}
@@ -124,7 +120,7 @@ const PostSkelton = () => {
                 }}
               >
                 <Skeleton
-                   animation='wave'
+                  animation="wave"
                   variant="text"
                   width={"100%"}
                   height={70}
@@ -138,5 +134,7 @@ const PostSkelton = () => {
     );
   });
 };
-
+PostSkelton.propTypes = {
+  isHome: propTypes.bool.isRequired,
+};
 export default PostSkelton;

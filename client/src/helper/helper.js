@@ -266,3 +266,40 @@ export async function editCover(formData) {
         return Promise.reject({ error, msg: "editing cover failed" });
     }
 }
+
+export async function savePost({ postId, userId }) {
+    const token = localStorage.getItem('token');
+    try {
+        return await axios.put(`/post/saved/${postId}`, { userId }, {
+            headers: {
+                "Content-Type": "application/json",
+                "authorization": `Bearer ${token}`,
+            },
+        });
+    } catch (error) {
+        console.error(error);
+        return Promise.reject({ error, msg: "saving posts failed" });
+    }
+}
+
+export async function savedPost(userId, pageParams) {
+    try {
+
+        const { data } = await axios.get(`/home/saved/${userId}`, {
+            params: {
+                page: pageParams
+            }
+        })
+        const datasaver = {
+            results: data.data,
+            total: data.total,
+            next: data.total > data.page * data.limit
+                ? pageParams + 1
+                : undefined,
+        };
+        return datasaver;
+    } catch (error) {
+        console.error(error)
+        return Promise.reject({ error: "fetching posts failed" })
+    }
+}

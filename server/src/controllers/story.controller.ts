@@ -18,7 +18,7 @@ export async function newStory(req: Request, res: Response) {
     const cutoffTime = new Date(Date.now() - 24 * 60 * 60 * 1000);
     const file = req.file;
     const { userId } = req.body;
-    const hasStory = await Story.find({ userId});
+    const hasStory = await Story.find({ userId });
 
     if (hasStory.length > 0) {
       await Story.updateMany(
