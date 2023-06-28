@@ -39,7 +39,7 @@ const Saved = () => {
           right: 0,
         }}
       >
-        {status === "loading" || data === undefined ? (
+        {status === "loading" || data.pages.total ? (
           <>
             <Grid
               item
