@@ -39,6 +39,7 @@ router.route("/home/homeposts/:userId").get(homePosts); // user's home posts
 router.route("/user/comments/:postId").get(getComments); //getting comments
 router.route("/home/homestory/:userId").get(homeStory); // user's home posts
 router.route("/user/profileposts/:userId").get(profilePost); // user's profile posts
+router.route("/user/profile/:userId").get(controller.userProfile); // user's profile
 router.route("/home/saved/:userId").get(savedPosts); // user's saved posts
 
 // Put Route

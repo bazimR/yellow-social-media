@@ -15,19 +15,34 @@ import { RiEditFill } from "@react-icons/all-files/ri/RiEditFill.esm";
 import { RiGridFill } from "@react-icons/all-files/ri/RiGridFill.esm";
 import { useQuery } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
-import { profilePosts } from "../../helper/helper";
+import { profilePosts, userProfile } from "../../helper/helper";
 import { setCoverModal, setProfileModal } from "../../redux/editProfileSlice";
 import { setModalComment } from "../../redux/commentModelSlice";
 import { setPostRedux } from "../../redux/postSlice";
 import CommentModal from "../../components/user/CommentModal";
+import { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
 
 const Profile = () => {
   const user = useSelector((state) => state.user.value);
+  const profileId = useSelector((state) => state.user.profileId);
   const dispatch = useDispatch();
-  const userId = user._id;
+  const [isFetching, setisFetching] = useState(true);
+  const [profile, setProfile] = useState(null);
+  useEffect(() => {
+    userProfile(profileId)
+      .then((data) => {
+        setProfile(data);
+        setisFetching(false);
+      })
+      .catch((err) => {
+        toast.error(err);
+      });
+  }, [profileId]);
+
   const { data, isLoading } = useQuery({
-    queryKey: ["userPosts", userId],
-    queryFn: () => profilePosts(userId),
+    queryKey: ["userPosts", profileId],
+    queryFn: () => profilePosts(profileId),
   });
   const style = {
     background: "rgba(255, 255, 255, 0.2)",
@@ -43,7 +58,7 @@ const Profile = () => {
     dispatch(setCoverModal(true));
   };
 
-  if (isLoading) return <h1>loading</h1>;
+  if (isLoading || isFetching) return <h1>loading</h1>;
   const handleClick = (post) => {
     dispatch(setPostRedux(post));
     dispatch(setModalComment(true));
@@ -51,7 +66,7 @@ const Profile = () => {
   return (
     // TODO:refactor!!!!!!!!!!
     <>
-      <CommentModal/>
+      <CommentModal />
       <Grid
         container
         direction="row"
@@ -95,22 +110,24 @@ const Profile = () => {
                 justifyContent: "flex-end",
                 alignItems: "end",
               }}
-              image={user.coverImageUrl}
+              image={profile.coverImageUrl}
             >
-              <Button
-                onClick={handleCover}
-                sx={{
-                  margin: 2,
-                  paddingX: 2,
-                  color: "primary.main",
-                  backgroundColor: "white",
-                  borderRadius: "10px",
-                }}
-                variant="text"
-                startIcon={<RiCamera2Fill />}
-              >
-                edit cover photo
-              </Button>
+              {user._id === profileId && (
+                <Button
+                  onClick={handleCover}
+                  sx={{
+                    margin: 2,
+                    paddingX: 2,
+                    color: "primary.main",
+                    backgroundColor: "white",
+                    borderRadius: "10px",
+                  }}
+                  variant="text"
+                  startIcon={<RiCamera2Fill />}
+                >
+                  edit cover photo
+                </Button>
+              )}
             </CardMedia>
             <Grid
               sx={{
@@ -121,7 +138,7 @@ const Profile = () => {
             >
               <CardContent>
                 <Avatar
-                  src={user.profileUrl}
+                  src={profile.profileUrl}
                   sx={{
                     border: 5,
                     borderColor: "white",
@@ -144,7 +161,7 @@ const Profile = () => {
                     color: "primary.dark",
                   }}
                 >
-                  {user.username}
+                  {profile.username}
                 </Typography>
                 <Grid
                   sx={{
@@ -186,7 +203,7 @@ const Profile = () => {
                       mr: 1,
                     }}
                   >
-                    {user.follower.length}
+                    {profile.follower.length}
                   </Typography>
                   <Typography
                     component={"span"}
@@ -208,7 +225,7 @@ const Profile = () => {
                       mr: 1,
                     }}
                   >
-                    {user.following.length}
+                    {profile.following.length}
                   </Typography>
                   <Typography
                     component={"span"}
@@ -229,7 +246,7 @@ const Profile = () => {
                     color: "primary.dark",
                   }}
                 >
-                  {user.firstname} {user.lastname}
+                  {profile.firstname} {profile.lastname}
                 </Typography>
                 <Box sx={{ width: 300, height: 50, mt: 1 }}>
                   <Typography
@@ -240,34 +257,40 @@ const Profile = () => {
                       color: "primary.dark",
                     }}
                   >
-                    {user.biography || "add bio"}
+                    {profile.biography || "add bio"}
                   </Typography>
                 </Box>
               </Grid>
-              <Button
-                onClick={handleProfileEdit}
-                size="medium"
-                sx={{
-                  marginLeft: "auto",
-                  marginRight: 2,
-                  marginTop: "auto",
-                  color: "primary.main",
-                  backgroundColor: "white",
-                  borderRadius: "8px",
-                  alignItems: "center",
-                  paddingX: 1,
-                }}
-                variant="text"
-                startIcon={
-                  <RiEditFill style={{ width: "15px", height: "15px" }} />
-                }
-              >
-                <Typography
-                  sx={{ fontSize: "1em", fontWeight: 600, textAlign: "center" }}
+              {user._id === profileId && (
+                <Button
+                  onClick={handleProfileEdit}
+                  size="medium"
+                  sx={{
+                    marginLeft: "auto",
+                    marginRight: 2,
+                    marginTop: "auto",
+                    color: "primary.main",
+                    backgroundColor: "white",
+                    borderRadius: "8px",
+                    alignItems: "center",
+                    paddingX: 1,
+                  }}
+                  variant="text"
+                  startIcon={
+                    <RiEditFill style={{ width: "15px", height: "15px" }} />
+                  }
                 >
-                  edit profile
-                </Typography>
-              </Button>
+                  <Typography
+                    sx={{
+                      fontSize: "1em",
+                      fontWeight: 600,
+                      textAlign: "center",
+                    }}
+                  >
+                    edit profile
+                  </Typography>
+                </Button>
+              )}
             </Grid>
           </Card>
         </Grid>
@@ -314,8 +337,8 @@ const Profile = () => {
               {data.map((item) => (
                 <ImageListItem key={item._id}>
                   <img
-                    style={{cursor:'pointer'}}
-                    onClick={()=>handleClick(item)}
+                    style={{ cursor: "pointer" }}
+                    onClick={() => handleClick(item)}
                     src={item.imageUrl}
                     srcSet={item.imageUrl}
                     alt={item.caption}

@@ -74,6 +74,7 @@ export async function homePosts(req: Request, res: Response) {
 
     const friendList = await User.findOne({ _id: userId }).select("following");
     friendList?.following.push(userId);
+    console.log(friendList);
     const total = await Post.count({
       userId: { $in: friendList?.following },
       isBlocked: false,
@@ -185,6 +186,7 @@ export async function editPost(req: Request, res: Response) {
     res.status(500).send({ error, err: "internal server error" });
   }
 }
+
 
 export async function profilePost(req: Request, res: Response) {
   try {

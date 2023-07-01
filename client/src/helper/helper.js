@@ -225,6 +225,15 @@ export async function editPost(postData) {
         return Promise.reject({ error, msg: "Edit post failed" });
     }
 }
+export async function userProfile(userId) {
+    try {
+        const { data } = await axios.get(`/user/profile/${userId}`)
+        return Promise.resolve(data)
+    } catch (error) {
+        console.error(error);
+        return Promise.reject({ error, msg: "fetching profile failed" });
+    }
+}
 
 export async function profilePosts(userId) {
     try {

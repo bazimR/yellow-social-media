@@ -438,3 +438,37 @@ export async function editCover(req: Request, res: Response) {
     res.status(500).send(error);
   }
 }
+
+export async function userProfile(req: Request, res: Response) {
+  try {
+    const { userId } = req.params;
+    console.log(userId);
+    const user = await User.findOne({ _id: userId });
+    if (user?.profile) {
+      const profileImg = await getSignedUrl(
+        s3,
+        new GetObjectCommand({
+          Key: user?.profile,
+          Bucket: bucketName,
+        }),
+        { expiresIn: 60 * 60 * 60 }
+      );
+      user?.set("profileUrl", profileImg, { strict: false });
+    }
+    if (user?.coverImage) {
+      const coverImg = await getSignedUrl(
+        s3,
+        new GetObjectCommand({
+          Key: user?.coverImage,
+          Bucket: bucketName,
+        }),
+        { expiresIn: 60 * 60 * 60 }
+      );
+      user?.set("coverImageUrl", coverImg, { strict: false });
+    }
+
+    res.status(200).send(user);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+}

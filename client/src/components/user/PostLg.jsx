@@ -28,6 +28,8 @@ import { setModalComment } from "../../redux/commentModelSlice";
 import { RiMoreFill } from "@react-icons/all-files/ri/RiMoreFill.esm";
 import { useConfirm } from "material-ui-confirm";
 import { toast } from "react-hot-toast";
+import { setProfileId } from "../../redux/userSlice";
+import { useNavigate } from "react-router-dom";
 
 const PostLg = ({ posts, isHome }) => {
   const confirm = useConfirm();
@@ -35,7 +37,7 @@ const PostLg = ({ posts, isHome }) => {
   const [likeCount, setLikeCount] = useState(posts.likes.length);
   const [like, setLike] = useState(posts.likes.includes(userId));
   const [saved, setSaved] = useState(posts.saved.includes(userId));
-
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const queryClient = useQueryClient();
@@ -109,6 +111,11 @@ const PostLg = ({ posts, isHome }) => {
     dispatch(setPostModal(true));
     setAnchorEl(null);
   };
+
+  // const handleProfile = (profileUserId) => {
+  //   if (profileUserId === userId) {
+  //   }
+  // }
   return (
     <>
       <Card
@@ -122,6 +129,10 @@ const PostLg = ({ posts, isHome }) => {
       >
         <CardActions sx={{ top: 0, left: 0, padding: 0 }}>
           <Avatar
+            onClick={() => {
+              dispatch(setProfileId(posts.userId));
+              navigate("profile");
+            }}
             alt="user"
             src={posts.profileUrl}
             sx={{
@@ -129,6 +140,7 @@ const PostLg = ({ posts, isHome }) => {
               width: 40,
               height: 40,
               marginY: 1,
+              cursor: "pointer",
             }}
           />
           <Typography

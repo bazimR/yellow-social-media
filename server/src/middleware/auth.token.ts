@@ -17,6 +17,7 @@ export const authToken = (req: Request, res: Response, next: NextFunction) => {
       if (err) {
         return res.status(401).json({ msg: "Invalid Token" ,err:err});
       }
+      // req.userId=user.userId
       next();
     });
   } catch (error) {

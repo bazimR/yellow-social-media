@@ -10,7 +10,7 @@ const Saved = () => {
   const lastPostReft = useRef(null);
 
   const userId = useSelector((state) => state.user.value._id);
-  const { data, fetchNextPage, status, isFetching, hasNextPage } =
+  const { data, fetchNextPage, status, hasNextPage } =
     useSavedQuery(userId);
 
   const { ref, entry } = useIntersection({

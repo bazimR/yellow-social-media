@@ -5,9 +5,11 @@ import {
   CardContent,
   Typography,
 } from "@mui/material";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { setProfileId } from "../../redux/userSlice";
 const ProfileWidget = () => {
+  const dispatch = useDispatch()
   const navigate = useNavigate();
   const style = {
     background:
@@ -38,6 +40,7 @@ const ProfileWidget = () => {
     >
       <CardActionArea
         onClick={() => {
+          dispatch(setProfileId(user._id))
           navigate("profile");
         }}
         style={style}
